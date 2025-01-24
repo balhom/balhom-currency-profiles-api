@@ -1,2 +1,3 @@
-# balhom-currency-profiles-api
-BalHom Users API which acts as a microservice for BalHom infrastructure
+# Balhom Currency Profiles API
+
+BalHom Currency Profiles API which acts as a microservice for BalHom infrastructure
