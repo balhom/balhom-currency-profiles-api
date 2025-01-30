@@ -2,9 +2,5 @@ quarkus:
   banner:
     path: banner.txt
   http:
+    host: 0.0.0.0
     port: 8081
-  oidc:
-    enabled: true
-    auth-server-url: http://localhost:9080/realms/balhom-realm
-    introspection-path: /protocol/openid-connect/certs
-    client-id: balhom-client

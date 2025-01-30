@@ -1,3 +1,7 @@
 quarkus:
   log:
     level: INFO
+  oidc:
+    auth-server-url: http://localhost:9080/realms/balhom-realm
+    client-id: balhom-client
+    application-type: service

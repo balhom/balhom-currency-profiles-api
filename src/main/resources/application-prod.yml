@@ -1,3 +1,14 @@
 quarkus:
   log:
-    level: WARN
+    level: INFO
+  oidc:
+    auth-server-url: ${vault:keycloak#url}/realms/balhom-realm
+    client-id: balhom-client
+    application-type: service
+  vault:
+    url: #TODO
+    authentication:
+      userpass:
+        username: #TODO
+        password: #TODO
+    secret-config-kv-path: #TODO

@@ -17,3 +17,10 @@ mvn quarkus:add-extension "-Dextensions=quarkus-config-yaml"
 ~~~
 mvn quarkus:add-extension "-Dextensions=oidc"
 ~~~
+
+* Install Vault
+
+~~~
+mvn quarkus:add-extension "-Dextensions=vault"
+~~~
+
