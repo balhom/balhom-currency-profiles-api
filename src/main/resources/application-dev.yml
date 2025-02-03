@@ -1,7 +1,8 @@
 quarkus:
-  log:
-    level: INFO
   oidc:
-    auth-server-url: http://localhost:9080/realms/balhom-realm
+    auth-server-url: http://localhost:7080/realms/balhom-realm
     client-id: balhom-client
     application-type: service
+  mongodb:
+    connection-string: mongodb://admin:password@localhost:27017
+    database: balhom_currency_db

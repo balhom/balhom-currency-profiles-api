@@ -24,3 +24,8 @@ mvn quarkus:add-extension "-Dextensions=oidc"
 mvn quarkus:add-extension "-Dextensions=vault"
 ~~~
 
+* Install Vault
+
+~~~
+mvn quarkus:add-extension "-Dextensions=io.quarkus:quarkus-mongodb-panache-kotlin"
+~~~

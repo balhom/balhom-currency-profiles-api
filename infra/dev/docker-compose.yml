@@ -1,0 +1,90 @@
+version: '2'
+
+services:
+
+  balhom-currency-profiles-api-keycloak:
+    image: bitnami/keycloak:26.1.0
+    container_name: balhom-currency-profiles-api-keycloak
+    ports:
+      - "7080:8080"
+    environment:
+      - KEYCLOAK_DATABASE_HOST=balhom-currency-profiles-api-keycloak-db
+      - KEYCLOAK_DATABASE_PORT=5432
+      - KEYCLOAK_DATABASE_NAME=balhomdb
+      - KEYCLOAK_DATABASE_USER=keycloak_user
+      - KEYCLOAK_DATABASE_PASSWORD=password
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=password
+      - KEYCLOAK_MANAGEMENT_USER=manager
+      - KEYCLOAK_MANAGEMENT_PASSWORD=password
+      - KEYCLOAK_INIT_REALM=balhom-realm
+      - KEYCLOAK_INIT_CLIENT=balhom-client
+      - KEYCLOAK_INIT_MAILHOG_HOST=balhom-currency-profiles-api-keycloak-mailhog
+      - KEYCLOAK_INIT_SMTP_SENDER=sender@balhom.com
+      - KEYCLOAK_INIT_SMTP_RECEIVER=reciever@balhom.com
+      - KEYCLOAK_INIT_USER=test@balhom.com
+      - KEYCLOAK_INIT_USER_PASSWORD=password
+    user: root
+    volumes:
+      - ./scripts/keycloak:/opt/startup/
+    command: [ "/bin/bash", "-c", "/opt/startup/entrypoint.sh" ]
+    networks:
+      balhom-currency-profiles-api-net:
+    restart: unless-stopped
+
+  balhom-currency-profiles-api-keycloak-db:
+    image: postgres:17.2
+    container_name: balhom-currency-profiles-api-keycloak-db
+    environment:
+      - POSTGRES_DB=balhomdb
+      - POSTGRES_USER=keycloak_user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - balhom-currency-profiles-api-keycloak-db-volume:/var/lib/postgresql/data
+    networks:
+      balhom-currency-profiles-api-net:
+    restart: unless-stopped
+
+  balhom-currency-profiles-api-keycloak-mailhog:
+    image: mailhog/mailhog
+    container_name: balhom-currency-profiles-api-keycloak-mailhog
+    networks:
+      balhom-currency-profiles-api-net:
+
+  balhom-currency-profiles-api-mongodb:
+    image: mongo:5.0.31
+    container_name: balhom-currency-profiles-api-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    volumes:
+      - balhom-currency-profiles-api-mongodb-volume:/data/db
+    networks:
+      balhom-currency-profiles-api-net:
+    restart: unless-stopped
+
+  balhom-currency-profiles-api-mongo-express:
+    image: mongo-express:1.0.2
+    container_name: balhom-currency-profiles-api-mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: balhom-currency-profiles-api-mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    ports:
+      - "7091:8081"
+    networks:
+      balhom-currency-profiles-api-net:
+    depends_on:
+      - balhom-currency-profiles-api-mongodb
+
+volumes:
+  balhom-currency-profiles-api-mongodb-volume:
+  balhom-currency-profiles-api-keycloak-db-volume:
+
+networks:
+  balhom-currency-profiles-api-net:
