@@ -34,7 +34,9 @@ data class CurrencyProfileMongoEntity(
     }
 
     companion object {
-        const val COLLECTION_NAME = "currency_profiles"
+        const val COLLECTION_NAME = "currencyProfiles"
+
+        const val USER_ID_FIELD_NAME = "userId"
 
         fun fromDomain(domain: CurrencyProfile): CurrencyProfileMongoEntity = CurrencyProfileMongoEntity(
             domain.id,

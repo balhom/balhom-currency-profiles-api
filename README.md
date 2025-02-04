@@ -14,6 +14,10 @@ BalHom Currency Profiles API which acts as a microservice for BalHom infrastruct
 
 ## Environment Variables
 
-| Name         | Description  |
-|--------------|--------------|
-| MONGO_DB_URL | Mongo db url |
+| Name            | Description                                         |
+|-----------------|-----------------------------------------------------|
+| KEYCLOAK_URL    | Keycloak instance url                               |
+| KEYCLOAK_REALM  | Keycloak instance realm name. Default: balhom-realm |
+| KEYCLOAK_CLIENT | Keycloak instance client id. Default: balhom-client |
+| MONGODB_URL     | Mongo instance url                                  |
+| MONGODB_DB      | Mongo instance database name                        |

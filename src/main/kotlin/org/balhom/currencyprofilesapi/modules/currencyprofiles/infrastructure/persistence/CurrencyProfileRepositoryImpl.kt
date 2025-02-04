@@ -14,7 +14,13 @@ class CurrencyProfileRepositoryImpl(private val currencyProfileMongoRepository: 
 
     override fun findByIdAndUserId(id: UUID, userId: UUID): CurrencyProfile? {
         return currencyProfileMongoRepository
-            .find("_id", id)
+            .find(
+                "_id = ?1 and "
+                        + CurrencyProfileMongoEntity.USER_ID_FIELD_NAME
+                        + " = ?2",
+                id,
+                userId
+            )
             .firstResult()
             ?.toDomain()
     }
@@ -23,7 +29,11 @@ class CurrencyProfileRepositoryImpl(private val currencyProfileMongoRepository: 
         userId: UUID
     ): List<CurrencyProfile> {
         return currencyProfileMongoRepository
-            .listAll()
+            .find(
+                CurrencyProfileMongoEntity.USER_ID_FIELD_NAME,
+                userId
+            )
+            .list()
             .map { it.toDomain() }
             .toList()
     }

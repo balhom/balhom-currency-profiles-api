@@ -2,13 +2,9 @@ quarkus:
   log:
     level: INFO
   oidc:
-    auth-server-url: ${vault:keycloak#url}/realms/balhom-realm
-    client-id: balhom-client
+    auth-server-url: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM:balhom-realm}
+    client-id: ${KEYCLOAK_CLIENT:balhom-client}
     application-type: service
-  vault:
-    url: #TODO
-    authentication:
-      userpass:
-        username: #TODO
-        password: #TODO
-    secret-config-kv-path: #TODO
+  mongodb:
+    connection-string: ${MONGODB_URL}
+    database: ${MONGODB_DB:balHomCurrencyDB}
