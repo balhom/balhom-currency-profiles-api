@@ -6,3 +6,14 @@ quarkus:
   mongodb:
     connection-string: mongodb://admin:password@localhost:27017
     database: balHomCurrencyDB
+
+kafka:
+  bootstrap:
+    servers: PLAINTEXT_HOST://localhost:29092
+
+mp:
+  messaging:
+    outgoing:
+      currency-profile-events:
+        connector: smallrye-kafka
+        topic: currency-profile-events

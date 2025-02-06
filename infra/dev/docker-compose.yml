@@ -2,6 +2,8 @@ version: '2'
 
 services:
 
+  # Keycloak Section
+
   balhom-currency-profiles-api-keycloak:
     image: bitnami/keycloak:26.1.0
     container_name: balhom-currency-profiles-api-keycloak
@@ -29,7 +31,7 @@ services:
       - ./keycloak/scripts:/opt/startup/
     command: [ "/bin/bash", "-c", "/opt/startup/entrypoint.sh" ]
     networks:
-      balhom-currency-profiles-api-net:
+      balhom-currency-profiles-api-keycloak-net:
     restart: unless-stopped
 
   balhom-currency-profiles-api-keycloak-db:
@@ -42,14 +44,16 @@ services:
     volumes:
       - balhom-currency-profiles-api-keycloak-db-volume:/var/lib/postgresql/data
     networks:
-      balhom-currency-profiles-api-net:
+      balhom-currency-profiles-api-keycloak-net:
     restart: unless-stopped
 
   balhom-currency-profiles-api-keycloak-mailhog:
     image: mailhog/mailhog
     container_name: balhom-currency-profiles-api-keycloak-mailhog
     networks:
-      balhom-currency-profiles-api-net:
+      balhom-currency-profiles-api-keycloak-net:
+
+  # MongoDB Section
 
   balhom-currency-profiles-api-mongodb:
     image: mongo:5.0.31
@@ -62,7 +66,7 @@ services:
     volumes:
       - balhom-currency-profiles-api-mongodb-volume:/data/db
     networks:
-      balhom-currency-profiles-api-net:
+      balhom-currency-profiles-api-mongo-net:
     restart: unless-stopped
 
   balhom-currency-profiles-api-mongo-express:
@@ -78,13 +82,61 @@ services:
     ports:
       - "7091:8081"
     networks:
-      balhom-currency-profiles-api-net:
+      balhom-currency-profiles-api-mongo-net:
     depends_on:
       - balhom-currency-profiles-api-mongodb
+
+  # Kafka Section
+
+  balhom-currency-profiles-api-zookeeper:
+    image: confluentinc/cp-zookeeper:7.8.0
+    container_name: balhom-currency-profiles-api-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      balhom-currency-profiles-api-kafka-net:
+
+  balhom-currency-profiles-api-kafka:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: balhom-currency-profiles-api-kafka
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: balhom-currency-profiles-api-zookeeper:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://balhom-currency-profiles-api-kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      balhom-currency-profiles-api-kafka-net:
+    #volumes:
+    #  - balhom-currency-profiles-api-kafka-volume:/var/lib/kafka/data
+    depends_on:
+      - balhom-currency-profiles-api-zookeeper
+
+  balhom-currency-profiles-api-kafdrop:
+    image: obsidiandynamics/kafdrop:4.1.0
+    container_name: balhom-currency-profiles-api-kafdrop
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: balhom-currency-profiles-api-kafka:9092
+      JVM_OPTS: -Xms32M -Xmx64M
+    networks:
+      balhom-currency-profiles-api-kafka-net:
+    depends_on:
+      - balhom-currency-profiles-api-kafka
 
 volumes:
   balhom-currency-profiles-api-mongodb-volume:
   balhom-currency-profiles-api-keycloak-db-volume:
+  balhom-currency-profiles-api-kafka-volume:
 
 networks:
-  balhom-currency-profiles-api-net:
+  balhom-currency-profiles-api-keycloak-net:
+  balhom-currency-profiles-api-mongo-net:
+  balhom-currency-profiles-api-kafka-net:

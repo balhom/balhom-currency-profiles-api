@@ -4,6 +4,7 @@ import io.quarkus.security.Authenticated
 import jakarta.inject.Inject
 import jakarta.validation.Valid
 import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.PUT
@@ -93,4 +94,19 @@ class CurrencyProfileResource(private val service: CurrencyProfileService) {
             .ok(updated)
             .build()
     }
+
+    @DELETE
+    @Path("/{id}")
+    fun deleteById(@PathParam("id") id: UUID): Response {
+        service.deleteCurrencyProfile(
+            ObjectIdUserProps(
+                id,
+                UUID.fromString(jwt.subject)
+            )
+        )
+        return Response
+            .noContent()
+            .build()
+    }
+
 }

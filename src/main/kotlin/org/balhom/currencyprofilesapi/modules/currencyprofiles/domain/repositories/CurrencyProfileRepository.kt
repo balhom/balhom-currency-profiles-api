@@ -11,4 +11,6 @@ interface CurrencyProfileRepository {
     fun save(currencyProfile: CurrencyProfile): CurrencyProfile
 
     fun update(currencyProfile: CurrencyProfile): CurrencyProfile
+
+    fun delete(currencyProfile: CurrencyProfile)
 }

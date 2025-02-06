@@ -52,4 +52,15 @@ class CurrencyProfileRepositoryImpl(private val currencyProfileMongoRepository: 
             .update(entity)
         return entity.toDomain()
     }
+
+    override fun delete(currencyProfile: CurrencyProfile) {
+        currencyProfileMongoRepository
+            .find(
+                "_id = ?1 and "
+                        + CurrencyProfileMongoEntity.USER_ID_FIELD_NAME
+                        + " = ?2",
+                currencyProfile.id,
+                currencyProfile.userId
+            )
+    }
 }

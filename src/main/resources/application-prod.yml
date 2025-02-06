@@ -8,3 +8,14 @@ quarkus:
   mongodb:
     connection-string: ${MONGODB_URL}
     database: ${MONGODB_DB:balHomCurrencyDB}
+
+kafka:
+  bootstrap:
+    servers: ${KAFKA_SERVERS}
+
+mp:
+  messaging:
+    outgoing:
+      currency-profile-events:
+        connector: smallrye-kafka
+        topic: currency-profile-events

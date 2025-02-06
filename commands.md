@@ -18,14 +18,14 @@ mvn quarkus:add-extension "-Dextensions=quarkus-config-yaml"
 mvn quarkus:add-extension "-Dextensions=oidc"
 ~~~
 
-* Install Vault
-
-~~~
-mvn quarkus:add-extension "-Dextensions=vault"
-~~~
-
-* Install Vault
+* Install Mongo dependencies
 
 ~~~
 mvn quarkus:add-extension "-Dextensions=io.quarkus:quarkus-mongodb-panache-kotlin"
+~~~
+
+* Install Kafka dependencies
+
+~~~
+mvn quarkus:add-extension "-Dextensions=messaging-kafka"
 ~~~
