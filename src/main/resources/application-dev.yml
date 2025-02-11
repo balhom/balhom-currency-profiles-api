@@ -7,6 +7,23 @@ quarkus:
     connection-string: mongodb://admin:password@localhost:27017
     database: balHomCurrencyDB
 
+  s3:
+    endpoint-override: http://localhost:9090
+    path-style-access: true
+    sync-client:
+      type: apache
+    aws:
+      region: us-west-2
+      credentials:
+        type: static
+        static-provider:
+          access-key-id: admin
+          secret-access-key: password
+    devservices:
+      enabled: false
+    bucket:
+      name: balhom-currency-api-bucket
+
 kafka:
   bootstrap:
     servers: PLAINTEXT_HOST://localhost:29092
@@ -17,3 +34,9 @@ mp:
       currency-profile-events:
         connector: smallrye-kafka
         topic: currency-profile-events
+    incoming:
+      transaction-events:
+        connector: smallrye-kafka
+        topic: transaction-events
+        group:
+          id: currency-profile-group

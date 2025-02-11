@@ -6,5 +6,6 @@ data class CurrencyProfileEvent(
     val action: String,
     val id: UUID,
     val monthlyGoal: Double,
-    var yearlyGoal: Double
+    var yearlyGoal: Double,
+    val userId: UUID,
 )

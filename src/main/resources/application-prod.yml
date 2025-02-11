@@ -9,6 +9,23 @@ quarkus:
     connection-string: ${MONGODB_URL}
     database: ${MONGODB_DB:balHomCurrencyDB}
 
+  s3:
+    endpoint-override: ${S3_URL}
+    path-style-access: true
+    sync-client:
+      type: apache
+    aws:
+      region: ${S3_REGION:us-west-2}
+      credentials:
+        type: static
+        static-provider:
+          access-key-id: ${S3_ACCESS_KEY}
+          secret-access-key: ${S3_SECRET_KEY}
+    devservices:
+      enabled: false
+    bucket:
+      name: ${S3_BUCKET_NAME:balhom-currency-api-bucket}
+
 kafka:
   bootstrap:
     servers: ${KAFKA_SERVERS}
@@ -19,3 +36,9 @@ mp:
       currency-profile-events:
         connector: smallrye-kafka
         topic: currency-profile-events
+    incoming:
+      transaction-events:
+        connector: smallrye-kafka
+        topic: transaction-events
+        group:
+          id: currency-profile-group

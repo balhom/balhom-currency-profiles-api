@@ -94,6 +94,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 22181
       ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
     ports:
       - "22181:2181"
     networks:
@@ -111,6 +112,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
     networks:
       balhom-currency-profiles-api-kafka-net:
     #volumes:
@@ -126,17 +128,40 @@ services:
     environment:
       KAFKA_BROKERCONNECT: balhom-currency-profiles-api-kafka:9092
       JVM_OPTS: -Xms32M -Xmx64M
+    restart: unless-stopped
     networks:
       balhom-currency-profiles-api-kafka-net:
     depends_on:
       - balhom-currency-profiles-api-kafka
 
+  # MinIO Section
+
+  balhom-currency-profiles-api-minio:
+    image: bitnami/minio:2025.2.3
+    container_name: balhom-currency-profiles-api-minio
+    ports:
+      - "9090:9090"
+      - "9091:9091"
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password
+      - MINIO_DEFAULT_BUCKET=balhom-currency-api-bucket
+    restart: unless-stopped
+    command: [ "/bin/bash", "-c", "/scripts/entrypoint.sh" ]
+    volumes:
+      - balhom-currency-profiles-api-minio-volume:/bitnami/minio/data
+      - ./minio/scripts/entrypoint.sh:/scripts/entrypoint.sh
+    networks:
+      - balhom-currency-profiles-api-minio-net
+
 volumes:
   balhom-currency-profiles-api-mongodb-volume:
   balhom-currency-profiles-api-keycloak-db-volume:
   balhom-currency-profiles-api-kafka-volume:
+  balhom-currency-profiles-api-minio-volume:
 
 networks:
   balhom-currency-profiles-api-keycloak-net:
   balhom-currency-profiles-api-mongo-net:
   balhom-currency-profiles-api-kafka-net:
+  balhom-currency-profiles-api-minio-net:

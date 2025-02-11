@@ -25,6 +25,7 @@ class CurrencyProfileEventProducerImpl(
                 currencyProfile.id,
                 currencyProfile.goalMonthlySaving,
                 currencyProfile.goalYearlySaving,
+                currencyProfile.userId,
             )
         )
     }
@@ -36,6 +37,7 @@ class CurrencyProfileEventProducerImpl(
                 currencyProfile.id,
                 currencyProfile.goalMonthlySaving,
                 currencyProfile.goalYearlySaving,
+                currencyProfile.userId,
             )
         )
     }
@@ -47,6 +49,7 @@ class CurrencyProfileEventProducerImpl(
                 currencyProfile.id,
                 currencyProfile.goalMonthlySaving,
                 currencyProfile.goalYearlySaving,
+                currencyProfile.userId,
             )
         )
     }

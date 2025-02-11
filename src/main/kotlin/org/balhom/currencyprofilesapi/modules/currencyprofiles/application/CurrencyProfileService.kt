@@ -1,19 +1,28 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.application
 
 import jakarta.enterprise.context.ApplicationScoped
+import org.balhom.currencyprofilesapi.common.clients.ObjectClient
+import org.balhom.currencyprofilesapi.common.data.models.FileData
+import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.common.data.props.ObjectIdUserProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileNotFoundException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileEventProducer
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UploadCurrencyProfileImageProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.repositories.CurrencyProfileRepository
 import java.util.UUID
+
 
 @ApplicationScoped
 class CurrencyProfileService(
     private val currencyProfileRepository: CurrencyProfileRepository,
     private val currencyProfileEventProducer: CurrencyProfileEventProducer,
+    private val objectClient: ObjectClient,
 ) {
+    companion object {
+        const val CURRENCY_PROFILE_PATH_PREFIX = "currency-profiles"
+    }
 
     fun getAllCurrencyProfiles(userId: UUID): List<CurrencyProfile> = currencyProfileRepository
         .findAllByUserId(userId)
@@ -36,6 +45,39 @@ class CurrencyProfileService(
             .save(currencyProfile)
     }
 
+    fun uploadCurrencyProfileImage(props: UploadCurrencyProfileImageProps) {
+        val currencyProfile = getCurrencyProfile(
+            props.objectIdUserProps
+        )
+
+        if (currencyProfile.imageData?.filePath != null) {
+            objectClient.deleteObject(
+                currencyProfile.imageData !!.filePath
+            )
+        }
+
+        val imagePath: String = (
+                CURRENCY_PROFILE_PATH_PREFIX
+                        + "/" + currencyProfile.userId + "/"
+                        + UUID.randomUUID().toString()
+                )
+
+        objectClient.uploadObject(
+            FileData(
+                props.image,
+                imagePath,
+                props.mimetype,
+            )
+        )
+
+        currencyProfile.imageData = FileReferenceData(
+            imagePath
+        )
+
+        currencyProfileRepository
+            .update(currencyProfile)
+    }
+
     fun updateCurrencyProfile(props: UpdateCurrencyProfileProps): CurrencyProfile {
         val currencyProfile = getCurrencyProfile(
             ObjectIdUserProps(
@@ -52,6 +94,11 @@ class CurrencyProfileService(
                 currencyProfile
             )
 
+        return currencyProfileRepository
+            .update(currencyProfile)
+    }
+
+    fun updateCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {
         return currencyProfileRepository
             .update(currencyProfile)
     }

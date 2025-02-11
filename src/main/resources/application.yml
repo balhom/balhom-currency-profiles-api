@@ -4,5 +4,7 @@ quarkus:
   http:
     host: 0.0.0.0
     port: 8081
+    limits:
+      max-body-size: 700K
   mongodb:
     uuid-representation: STANDARD

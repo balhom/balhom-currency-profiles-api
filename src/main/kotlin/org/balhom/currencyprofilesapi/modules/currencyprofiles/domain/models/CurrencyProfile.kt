@@ -2,6 +2,7 @@ package org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models
 
 import org.balhom.currencyprofilesapi.common.data.enums.CurrencyCodeEnum
 import org.balhom.currencyprofilesapi.common.data.models.AuditableData
+import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.InvalidCurrencyProfileInitDateException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
 import java.time.LocalDate
@@ -17,6 +18,7 @@ data class CurrencyProfile(
     var initDate: LocalDate,
     var goalMonthlySaving: Double,
     var goalYearlySaving: Double,
+    var imageData: FileReferenceData?,
     var auditableData: AuditableData,
 ) {
     fun update(props: UpdateCurrencyProfileProps) {

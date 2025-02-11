@@ -29,3 +29,9 @@ mvn quarkus:add-extension "-Dextensions=io.quarkus:quarkus-mongodb-panache-kotli
 ~~~
 mvn quarkus:add-extension "-Dextensions=messaging-kafka"
 ~~~
+
+* Install S3 dependencies
+
+~~~
+mvn quarkus:add-extension "-Dextensions=amazon-s3"
+~~~
