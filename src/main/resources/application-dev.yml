@@ -1,4 +1,6 @@
 quarkus:
+  log:
+    level: DEBUG
   oidc:
     auth-server-url: http://localhost:7080/realms/balhom-realm
     client-id: balhom-client
@@ -31,12 +33,17 @@ kafka:
 mp:
   messaging:
     outgoing:
-      currency-profile-events:
+      currency-profile-events-out:
         connector: smallrye-kafka
         topic: currency-profile-events
     incoming:
       transaction-events:
         connector: smallrye-kafka
         topic: transaction-events
+        group:
+          id: currency-profile-group
+      currency-profile-events-in:
+        connector: smallrye-kafka
+        topic: currency-profile-events
         group:
           id: currency-profile-group

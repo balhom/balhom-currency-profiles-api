@@ -4,6 +4,7 @@ quarkus:
   http:
     host: 0.0.0.0
     port: 8081
+    cors: true
     limits:
       max-body-size: 700K
   mongodb:

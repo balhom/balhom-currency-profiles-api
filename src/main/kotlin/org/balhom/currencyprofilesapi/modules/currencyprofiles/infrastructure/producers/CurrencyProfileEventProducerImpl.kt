@@ -1,5 +1,6 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.producers
 
+import io.quarkus.logging.Log
 import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileEventProducer
@@ -9,9 +10,11 @@ import org.eclipse.microprofile.reactive.messaging.Emitter
 
 @ApplicationScoped
 class CurrencyProfileEventProducerImpl(
-    @Channel("currency-profile-events") private val emitter: Emitter<CurrencyProfileEvent>
+    @Channel("currency-profile-events-out") private val emitter: Emitter<CurrencyProfileEvent>
 ) : CurrencyProfileEventProducer {
     fun send(event: CurrencyProfileEvent) {
+        Log.debug("Producing Kafka currency profile event: " + event.id)
+
         emitter
             .send(event)
             .toCompletableFuture()
