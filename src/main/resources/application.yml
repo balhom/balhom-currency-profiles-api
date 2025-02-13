@@ -7,5 +7,8 @@ quarkus:
     cors: true
     limits:
       max-body-size: 700K
+  quarkus:
+    resteasy-reactive:
+      path: /api/
   mongodb:
     uuid-representation: STANDARD

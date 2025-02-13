@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="test" type="JUnit" factoryName="JUnit">
+    <module name="balhom-currency-profiles-api" />
+    <shortenClasspath name="ARGS_FILE" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="directory" />
+    <envs>
+      <env name="QUARKUS_PROFILE" value="test" />
+    </envs>
+    <dir value="$PROJECT_DIR$/src/test/kotlin" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

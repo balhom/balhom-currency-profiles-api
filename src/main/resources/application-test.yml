@@ -1,0 +1,27 @@
+quarkus:
+  s3:
+    path-style-access: true
+    sync-client:
+      type: apache
+    devservices:
+      enabled: false
+    bucket:
+      name: test-bucket
+
+mp:
+  messaging:
+    outgoing:
+      currency-profile-events-out:
+        connector: smallrye-kafka
+        topic: currency-profile-events
+    incoming:
+      transaction-events:
+        connector: smallrye-kafka
+        topic: transaction-events
+        group:
+          id: currency-profile-group
+      currency-profile-events-in:
+        connector: smallrye-kafka
+        topic: currency-profile-events
+        group:
+          id: currency-profile-group
