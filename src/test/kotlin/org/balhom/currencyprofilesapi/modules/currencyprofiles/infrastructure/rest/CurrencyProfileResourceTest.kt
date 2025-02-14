@@ -25,7 +25,7 @@ class CurrencyProfileResourceTest : BaseTestContainersTest() {
     @InjectMock
     lateinit var jwt: JsonWebToken
 
-    final val mapper = jacksonObjectMapper()
+    private final val mapper = jacksonObjectMapper()
 
     init {
         mapper.findAndRegisterModules()

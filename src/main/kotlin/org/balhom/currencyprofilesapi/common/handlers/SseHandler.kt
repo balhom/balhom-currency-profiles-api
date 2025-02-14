@@ -19,7 +19,14 @@ class SseHandler(private val sse: Sse) {
         userId: UUID,
         eventSink: SseEventSink
     ) {
-        subscriptions[userId.toString()]?.close()
+        // Check if a subscription already exists with this ID
+        val existingSubscription = subscriptions[userId.toString()]
+        if (existingSubscription != null && ! existingSubscription.isClosed) {
+            // Close the previous connection if it is still open
+            existingSubscription.close()
+        }
+
+        Log.debug("Adding new SSE subscription")
         subscriptions[userId.toString()] = eventSink
     }
 
@@ -29,15 +36,29 @@ class SseHandler(private val sse: Sse) {
     ) {
         Log.debug("Sending SSE event: $data")
 
-        val eventSink = subscriptions[userId.toString()]
+        val userIdStr = userId.toString()
 
-        if (eventSink != null && ! eventSink.isClosed) {
-            eventSink.send(
+        // Check if a subscription already exists with this ID
+        val existingSubscription = subscriptions[userIdStr] ?: return
+
+        if (! existingSubscription.isClosed) {
+            // If the connection is already closed, delete the ID of the subscriptions
+            subscriptions.remove(userIdStr)
+            return
+        }
+
+        try {
+            existingSubscription.send(
                 sse.newEventBuilder()
                     .name(EVENT_NAME)
                     .data(data)
                     .build()
             )
+        } catch (e: Exception) {
+            // In case of error when sending, unsubscribe and report the problem
+            subscriptions.remove(userIdStr)
+
+            Log.debug("Error sending SSE event: $e")
         }
     }
 }
