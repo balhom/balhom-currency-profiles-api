@@ -8,6 +8,10 @@ quarkus:
   mongodb:
     connection-string: ${MONGODB_URL}
     database: ${MONGODB_DB:balHomCurrencyDB}
+  smallrye-openapi:
+    enable: false
+  swagger-ui:
+    enable: false
 
   s3:
     endpoint-override: ${S3_URL}

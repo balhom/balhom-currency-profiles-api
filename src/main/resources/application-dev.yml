@@ -1,6 +1,6 @@
 quarkus:
   log:
-    level: DEBUG
+    level: INFO
   oidc:
     auth-server-url: http://localhost:7080/realms/balhom-realm
     client-id: balhom-client
@@ -8,6 +8,12 @@ quarkus:
   mongodb:
     connection-string: mongodb://admin:password@localhost:27017
     database: balHomCurrencyDB
+  smallrye-openapi:
+    info-title: Currency Profile API
+    path: /openapi
+    security-scheme: jwt
+  swagger-ui:
+    path: /swagger
 
   s3:
     endpoint-override: http://localhost:9090
