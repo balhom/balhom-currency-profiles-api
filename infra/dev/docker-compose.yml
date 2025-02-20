@@ -5,7 +5,7 @@ services:
   # Keycloak Section
 
   balhom-currency-profiles-api-keycloak:
-    image: bitnami/keycloak:26.1.0
+    image: fabbo/balhom-keycloak:1.0.0
     container_name: balhom-currency-profiles-api-keycloak
     ports:
       - "7080:8080"
@@ -27,9 +27,6 @@ services:
       - KEYCLOAK_INIT_USER=test@balhom.com
       - KEYCLOAK_INIT_USER_PASSWORD=password
     user: root
-    volumes:
-      - ./keycloak/scripts:/opt/startup/
-    command: [ "/bin/bash", "-c", "/opt/startup/entrypoint.sh" ]
     networks:
       balhom-currency-profiles-api-keycloak-net:
     restart: unless-stopped
