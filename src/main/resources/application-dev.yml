@@ -58,5 +58,5 @@ keycloak:
   admin:
     url: http://localhost:7080
     realm: balhom-realm
-    client-id: balhom-admin-client
+    client-id: balhom-api-client
     client-secret: secretKey

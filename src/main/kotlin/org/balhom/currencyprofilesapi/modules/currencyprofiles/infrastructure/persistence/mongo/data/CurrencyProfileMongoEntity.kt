@@ -6,7 +6,6 @@ import org.balhom.currencyprofilesapi.common.data.enums.CurrencyCodeEnum
 import org.balhom.currencyprofilesapi.common.data.models.AuditableData
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfileSharedUser
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.persistence.mongo.CurrencyProfileMongoRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -23,7 +22,7 @@ data class CurrencyProfileMongoEntity(
     var goalMonthlySaving: Double,
     var goalYearlySaving: Double,
     var imageData: FileReferenceData?,
-    var sharedUsers: MutableList<CurrencyProfileSharedUser>,
+    var sharedUsers: MutableList<CurrencyProfileSharedUserMongoEntity>,
     var auditableData: AuditableData,
 ) {
     private fun updateImageData(objectStorageClient: ObjectStorageClient) {
@@ -63,7 +62,7 @@ data class CurrencyProfileMongoEntity(
             goalMonthlySaving,
             goalYearlySaving,
             imageData,
-            sharedUsers,
+            sharedUsers.map { it.toDomain() }.toMutableList(),
             auditableData,
         )
     }
@@ -85,7 +84,11 @@ data class CurrencyProfileMongoEntity(
             domain.goalMonthlySaving,
             domain.goalYearlySaving,
             domain.imageData,
-            domain.sharedUsers,
+            domain.sharedUsers.map {
+                CurrencyProfileSharedUserMongoEntity.fromDomain(
+                    it
+                )
+            }.toMutableList(),
             domain.auditableData,
         )
     }
