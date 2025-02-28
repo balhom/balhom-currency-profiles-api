@@ -1,11 +1,12 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.persistence.mongo.data
 
 import io.quarkus.mongodb.panache.common.MongoEntity
-import org.balhom.currencyprofilesapi.common.clients.ObjectClient
+import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.common.data.enums.CurrencyCodeEnum
 import org.balhom.currencyprofilesapi.common.data.models.AuditableData
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfileSharedUser
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.persistence.mongo.CurrencyProfileMongoRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -22,10 +23,11 @@ data class CurrencyProfileMongoEntity(
     var goalMonthlySaving: Double,
     var goalYearlySaving: Double,
     var imageData: FileReferenceData?,
+    var sharedUsers: MutableList<CurrencyProfileSharedUser>,
     var auditableData: AuditableData,
 ) {
-    private fun updateImageData(objectClient: ObjectClient) {
-        imageData !!.url = objectClient.getObjectUrl(
+    private fun updateImageData(objectStorageClient: ObjectStorageClient) {
+        imageData !!.url = objectStorageClient.getObjectUrl(
             imageData !!.filePath,
             IMAGE_EXPIRATION_MINUTES
         )
@@ -35,10 +37,10 @@ data class CurrencyProfileMongoEntity(
 
     fun toDomain(
         currencyProfileMongoRepository: CurrencyProfileMongoRepository,
-        objectClient: ObjectClient,
+        objectStorageClient: ObjectStorageClient,
     ): CurrencyProfile {
         if (imageData?.filePath != null) {
-            if (! objectClient.doesObjectExist(imageData !!.filePath)) {
+            if (! objectStorageClient.doesObjectExist(imageData !!.filePath)) {
                 imageData = null
             } else if (
                 (imageData?.url == null)
@@ -46,7 +48,7 @@ data class CurrencyProfileMongoEntity(
                         imageData?.expiration != null
                                 && imageData !!.expiration !!.isBefore(LocalDateTime.now()))
             ) {
-                updateImageData(objectClient)
+                updateImageData(objectStorageClient)
                 currencyProfileMongoRepository.update(this)
             }
         }
@@ -61,6 +63,7 @@ data class CurrencyProfileMongoEntity(
             goalMonthlySaving,
             goalYearlySaving,
             imageData,
+            sharedUsers,
             auditableData,
         )
     }
@@ -82,6 +85,7 @@ data class CurrencyProfileMongoEntity(
             domain.goalMonthlySaving,
             domain.goalYearlySaving,
             domain.imageData,
+            domain.sharedUsers,
             domain.auditableData,
         )
     }

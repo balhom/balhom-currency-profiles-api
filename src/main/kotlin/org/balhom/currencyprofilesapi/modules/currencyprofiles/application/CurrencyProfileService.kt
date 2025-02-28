@@ -1,7 +1,7 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.application
 
 import jakarta.enterprise.context.ApplicationScoped
-import org.balhom.currencyprofilesapi.common.clients.ObjectClient
+import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.common.data.models.FileData
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.common.data.props.ObjectIdUserProps
@@ -18,17 +18,17 @@ import java.util.UUID
 class CurrencyProfileService(
     private val currencyProfileRepository: CurrencyProfileRepository,
     private val currencyProfileEventProducer: CurrencyProfileEventProducer,
-    private val objectClient: ObjectClient,
+    private val objectStorageClient: ObjectStorageClient,
 ) {
     companion object {
         const val CURRENCY_PROFILE_PATH_PREFIX = "currency-profiles"
     }
 
     fun getAllCurrencyProfiles(userId: UUID): List<CurrencyProfile> = currencyProfileRepository
-        .findAllByUserId(userId)
+        .findAllByUserIdOrSharedUserId(userId)
 
     fun getCurrencyProfile(props: ObjectIdUserProps): CurrencyProfile = currencyProfileRepository
-        .findByIdAndUserId(
+        .findByIdAndUserIdOrSharedUserId(
             props.id,
             props.userId
         ) ?: throw CurrencyProfileNotFoundException()
@@ -51,7 +51,7 @@ class CurrencyProfileService(
         )
 
         if (currencyProfile.imageData?.filePath != null) {
-            objectClient.deleteObject(
+            objectStorageClient.deleteObject(
                 currencyProfile.imageData !!.filePath
             )
         }
@@ -62,7 +62,7 @@ class CurrencyProfileService(
                         + UUID.randomUUID().toString()
                 )
 
-        objectClient.uploadObject(
+        objectStorageClient.uploadObject(
             FileData(
                 props.image,
                 imagePath,
@@ -105,7 +105,11 @@ class CurrencyProfileService(
 
 
     fun deleteCurrencyProfile(props: ObjectIdUserProps) {
-        val currencyProfile = getCurrencyProfile(props)
+        val currencyProfile = currencyProfileRepository
+            .findByIdAndUserId(
+                props.id,
+                props.userId
+            ) ?: throw CurrencyProfileNotFoundException()
 
         currencyProfileEventProducer
             .sendDeleteEvent(

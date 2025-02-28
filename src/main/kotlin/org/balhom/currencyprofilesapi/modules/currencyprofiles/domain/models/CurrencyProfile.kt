@@ -19,6 +19,7 @@ data class CurrencyProfile(
     var goalMonthlySaving: Double,
     var goalYearlySaving: Double,
     var imageData: FileReferenceData?,
+    var sharedUsers: MutableList<CurrencyProfileSharedUser>,
     var auditableData: AuditableData,
 ) {
     fun update(props: UpdateCurrencyProfileProps) {

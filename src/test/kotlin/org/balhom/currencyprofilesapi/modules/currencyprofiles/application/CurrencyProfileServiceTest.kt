@@ -1,6 +1,6 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.application
 
-import org.balhom.currencyprofilesapi.common.clients.ObjectClient
+import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.common.data.models.FileData
 import org.balhom.currencyprofilesapi.common.data.models.MockFileReferenceDataFactory
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.MockCurrencyProfileFactory
@@ -25,7 +25,7 @@ class CurrencyProfileServiceTest {
 
     private lateinit var currencyProfileRepository: CurrencyProfileRepository
     private lateinit var currencyProfileEventProducer: CurrencyProfileEventProducer
-    private lateinit var objectClient: ObjectClient
+    private lateinit var objectStorageClient: ObjectStorageClient
 
     private lateinit var currencyProfileService: CurrencyProfileService
 
@@ -37,14 +37,14 @@ class CurrencyProfileServiceTest {
         currencyProfileEventProducer = mock(
             CurrencyProfileEventProducer::class.java
         )
-        objectClient = mock(
-            ObjectClient::class.java
+        objectStorageClient = mock(
+            ObjectStorageClient::class.java
         )
 
         currencyProfileService = CurrencyProfileService(
             currencyProfileRepository,
             currencyProfileEventProducer,
-            objectClient
+            objectStorageClient
         )
     }
 
@@ -56,14 +56,14 @@ class CurrencyProfileServiceTest {
         )
         `when`(
             currencyProfileRepository
-                .findAllByUserId(userId)
+                .findAllByUserIdOrSharedUserId(userId)
         ).thenReturn(expectedProfiles)
 
         val result = currencyProfileService.getAllCurrencyProfiles(userId)
 
         assertEquals(expectedProfiles, result)
         verify(currencyProfileRepository)
-            .findAllByUserId(userId)
+            .findAllByUserIdOrSharedUserId(userId)
     }
 
     @Test
@@ -82,25 +82,25 @@ class CurrencyProfileServiceTest {
 
         `when`(
             currencyProfileRepository
-                .findByIdAndUserId(
+                .findByIdAndUserIdOrSharedUserId(
                     props.objectIdUserProps.id,
                     props.objectIdUserProps.userId
                 )
         ).thenReturn(currencyProfile)
 
         doNothing()
-            .`when`(objectClient)
+            .`when`(objectStorageClient)
             .uploadObject(capture<FileData>(newPathCaptor))
         doNothing()
-            .`when`(objectClient)
+            .`when`(objectStorageClient)
             .deleteObject(anyString())
 
         currencyProfileService
             .uploadCurrencyProfileImage(props)
 
-        verify(objectClient)
+        verify(objectStorageClient)
             .deleteObject(expectedDeletedPath)
-        verify(objectClient)
+        verify(objectStorageClient)
             .uploadObject(any<FileData>())
         verify(currencyProfileRepository)
             .update(currencyProfile)

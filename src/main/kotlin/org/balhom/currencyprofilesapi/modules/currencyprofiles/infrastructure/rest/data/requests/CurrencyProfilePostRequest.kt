@@ -12,25 +12,25 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 data class CurrencyProfilePostRequest(
-    @field:NotBlank
-    @field:Size(max = 15)
+    @NotBlank
+    @Size(max = 15)
     val name: String?,
 
-    @field:NotNull
+    @NotNull
     val currencyCode: CurrencyCodeEnum?,
 
-    @field:NotNull
+    @NotNull
     val balance: Double?,
 
-    @field:NotNull
+    @NotNull
     val initDate: LocalDate?,
 
-    @field:NotNull
-    @field:DecimalMin(value = "0.0", inclusive = true)
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = true)
     val goalMonthlySaving: Double?,
 
-    @field:NotNull
-    @field:DecimalMin(value = "0.0", inclusive = true)
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = true)
     val goalYearlySaving: Double?
 ) {
     fun toDomain(
@@ -45,6 +45,7 @@ data class CurrencyProfilePostRequest(
         goalMonthlySaving !!,
         goalYearlySaving !!,
         null,
+        ArrayList(),
         AuditableData(
             LocalDateTime.now(),
             userId.toString(),

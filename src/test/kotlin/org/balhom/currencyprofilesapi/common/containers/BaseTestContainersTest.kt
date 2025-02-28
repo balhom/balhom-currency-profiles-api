@@ -1,6 +1,8 @@
 package org.balhom.currencyprofilesapi.common.containers
 
+import dasniko.testcontainers.keycloak.KeycloakContainer
 import io.quarkus.test.junit.QuarkusTest
+import org.balhom.currencyprofilesapi.common.seeders.TestSeeder
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -17,12 +19,18 @@ abstract class BaseTestContainersTest {
         private val mongoContainer = MongoDBContainer(
             DockerImageName.parse("mongo:5.0")
         )
+
         private val kafkaContainer = KafkaContainer(
             DockerImageName.parse(
                 "apache/kafka:3.7.2"
             )
         )
+
         private val s3Container = S3TestContainer()
+
+        private val keycloakContainer = KeycloakContainer(
+            "keycloak/keycloak:26.1"
+        ).withRealmImportFile("keycloak/realm-export.json")
 
         @BeforeAll
         @JvmStatic
@@ -30,16 +38,21 @@ abstract class BaseTestContainersTest {
             mongoContainer.start()
             kafkaContainer.start()
             s3Container.start()
+            keycloakContainer.start()
 
+            // MongoDB Section
             System.setProperty(
                 "quarkus.mongodb.connection-string",
                 mongoContainer.replicaSetUrl
             )
+
+            // Kafka Section
             System.setProperty(
                 "kafka.bootstrap.servers",
                 kafkaContainer.bootstrapServers
             )
 
+            // S3 Section
             System.setProperty(
                 "quarkus.s3.endpoint-override",
                 s3Container.getEndpointOverride(LocalStackContainer.Service.S3)
@@ -61,6 +74,16 @@ abstract class BaseTestContainersTest {
                 "quarkus.s3.aws.credentials.secret-access-key",
                 s3Container.secretKey
             )
+
+            // Keycloak Section
+            System.setProperty(
+                "keycloak.admin.url",
+                keycloakContainer.authServerUrl
+            )
+
+            TestSeeder.startSeeders(
+                keycloakContainer.authServerUrl
+            )
         }
 
         @AfterAll
@@ -69,6 +92,7 @@ abstract class BaseTestContainersTest {
             mongoContainer.stop()
             kafkaContainer.stop()
             s3Container.stop()
+            keycloakContainer.stop()
         }
     }
 }

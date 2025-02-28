@@ -10,5 +10,5 @@ data class UpdateCurrencyProfileProps(
     val balance: Double,
     val initDate: LocalDate,
     val goalMonthlySaving: Double,
-    val goalYearlySaving: Double
+    val goalYearlySaving: Double,
 )

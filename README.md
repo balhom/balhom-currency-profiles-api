@@ -13,9 +13,11 @@ currency profiles.
 
 | Name                                               | Description                                                                                                    |
 |----------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| KEYCLOAK_URL                                       | Keycloak instance url                                                                                          |
+| KEYCLOAK_URL                                       | Keycloak instance url. Ex: http://localhost:7080                                                               |
 | KEYCLOAK_REALM                                     | Keycloak instance realm name. Default: balhom-realm                                                            |
-| KEYCLOAK_CLIENT                                    | Keycloak instance client id. Default: balhom-client                                                            |
+| KEYCLOAK_CLIENT_ID                                 | Keycloak instance client id. Default: balhom-client                                                            |
+| KEYCLOAK_API_CLIENT_ID                             | Keycloak instance client id for the API to read user data. Default: balhom-api-client                          |
+| KEYCLOAK_API_CLIENT_SECRET                         | Keycloak instance client secret for the API to read user data                                                  |
 | MONGODB_URL                                        | Mongo instance url                                                                                             |
 | MONGODB_DB                                         | Mongo instance database name                                                                                   |
 | S3_URL                                             | S3 url                                                                                                         |
@@ -33,10 +35,12 @@ currency profiles.
 
 ## Error Codes
 
-| Code | Description                               |
-|------|-------------------------------------------|
-| 100  | "Currency Profile not found"              |
-| 101  | "The init date must not be in the future" |
+| Code | Description                                       |
+|------|---------------------------------------------------|
+| 100  | "Currency Profile not found"                      |
+| 101  | "The init date must not be in the future"         |
+| 102  | "Currency Profile user not found"                 |
+| 103  | "Currency profile shared user max number reached" |
 
 > **1 to 99** Generic errors \
 > **100 to 199** Currency Profile related errors

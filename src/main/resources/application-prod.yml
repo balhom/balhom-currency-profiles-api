@@ -3,7 +3,7 @@ quarkus:
     level: INFO
   oidc:
     auth-server-url: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM:balhom-realm}
-    client-id: ${KEYCLOAK_CLIENT:balhom-client}
+    client-id: ${KEYCLOAK_CLIENT_ID:balhom-client}
     application-type: service
   mongodb:
     connection-string: ${MONGODB_URL}
@@ -51,3 +51,10 @@ mp:
         topic: currency-profile-events
         group:
           id: currency-profile-group
+
+keycloak:
+  admin:
+    url: ${KEYCLOAK_URL}
+    realm: ${KEYCLOAK_REALM:balhom-realm}
+    client-id: ${KEYCLOAK_API_CLIENT_ID:balhom-api-client}
+    client-secret: ${KEYCLOAK_API_CLIENT_SECRET}

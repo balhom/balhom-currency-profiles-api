@@ -6,7 +6,9 @@ import java.util.UUID
 interface CurrencyProfileRepository {
     fun findByIdAndUserId(id: UUID, userId: UUID): CurrencyProfile?
 
-    fun findAllByUserId(userId: UUID): List<CurrencyProfile>
+    fun findByIdAndUserIdOrSharedUserId(id: UUID, userId: UUID): CurrencyProfile?
+
+    fun findAllByUserIdOrSharedUserId(userId: UUID): List<CurrencyProfile>
 
     fun save(currencyProfile: CurrencyProfile): CurrencyProfile
 

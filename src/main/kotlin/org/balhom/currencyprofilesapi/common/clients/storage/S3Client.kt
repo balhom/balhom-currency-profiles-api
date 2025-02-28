@@ -1,4 +1,4 @@
-package org.balhom.currencyprofilesapi.common.clients
+package org.balhom.currencyprofilesapi.common.clients.storage
 
 import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.common.data.models.FileData
@@ -15,13 +15,13 @@ import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignReques
 import java.time.Duration
 
 @ApplicationScoped
-class ObjectClient(
+class S3Client(
     val s3Client: S3Client,
     val s3Presigner: S3Presigner,
     @ConfigProperty(name = "quarkus.s3.bucket.name") val bucketName: String
-) {
+) : ObjectStorageClient {
 
-    fun doesObjectExist(objectKey: String): Boolean {
+    override fun doesObjectExist(objectKey: String): Boolean {
         return try {
             val headObjectRequest = HeadObjectRequest.builder()
                 .bucket(bucketName)
@@ -39,7 +39,7 @@ class ObjectClient(
         }
     }
 
-    fun getObjectUrl(objectKey: String, expirationMinutes: Long): String {
+    override fun getObjectUrl(objectKey: String, expirationMinutes: Long): String {
         val presignRequest = GetObjectPresignRequest.builder()
             .signatureDuration(
                 Duration.ofMinutes(expirationMinutes)
@@ -54,14 +54,14 @@ class ObjectClient(
         return presignedUrl.url().toString()
     }
 
-    fun uploadObject(fileData: FileData) {
+    override fun uploadObject(fileData: FileData) {
         s3Client.putObject(
             buildPutRequest(fileData),
             RequestBody.fromFile(fileData.data)
         )
     }
 
-    fun deleteObject(objectKey: String) {
+    override fun deleteObject(objectKey: String) {
         s3Client.deleteObject(
             buildDeleteRequest(objectKey)
         )

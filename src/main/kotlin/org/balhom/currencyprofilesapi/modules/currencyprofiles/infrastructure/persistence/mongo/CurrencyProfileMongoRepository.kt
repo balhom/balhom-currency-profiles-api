@@ -5,5 +5,4 @@ import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.persistence.mongo.data.CurrencyProfileMongoEntity
 
 @ApplicationScoped
-class CurrencyProfileMongoRepository : PanacheMongoRepository<CurrencyProfileMongoEntity> {
-}
+class CurrencyProfileMongoRepository : PanacheMongoRepository<CurrencyProfileMongoEntity>

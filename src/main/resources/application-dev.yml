@@ -53,3 +53,10 @@ mp:
         topic: currency-profile-events
         group:
           id: currency-profile-group
+
+keycloak:
+  admin:
+    url: http://localhost:7080
+    realm: balhom-realm
+    client-id: balhom-admin-client
+    client-secret: secretKey

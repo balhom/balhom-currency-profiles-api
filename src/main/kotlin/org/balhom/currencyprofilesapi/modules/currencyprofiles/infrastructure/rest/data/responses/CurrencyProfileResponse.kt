@@ -17,6 +17,7 @@ data class CurrencyProfileResponse(
     val goalMonthlySaving: Double,
     val goalYearlySaving: Double,
     val imageData: FileReferenceData?,
+    val ownerId: UUID,
 ) {
     companion object {
         fun fromDomain(domain: CurrencyProfile): CurrencyProfileResponse = CurrencyProfileResponse(
@@ -28,6 +29,7 @@ data class CurrencyProfileResponse(
             domain.goalMonthlySaving,
             domain.goalYearlySaving,
             domain.imageData,
+            domain.userId,
         )
     }
 }

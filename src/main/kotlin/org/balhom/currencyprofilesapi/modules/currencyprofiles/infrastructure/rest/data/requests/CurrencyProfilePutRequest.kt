@@ -9,22 +9,22 @@ import java.time.LocalDate
 import java.util.UUID
 
 data class CurrencyProfilePutRequest(
-    @field:NotBlank
-    @field:Size(max = 15)
+    @NotBlank
+    @Size(max = 15)
     val name: String?,
 
-    @field:NotNull
+    @NotNull
     val balance: Double?,
 
-    @field:NotNull
+    @NotNull
     val initDate: LocalDate?,
 
-    @field:NotNull
-    @field:DecimalMin(value = "0.0", inclusive = true)
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = true)
     val goalMonthlySaving: Double?,
 
-    @field:NotNull
-    @field:DecimalMin(value = "0.0", inclusive = true)
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = true)
     val goalYearlySaving: Double?
 ) {
     fun toUpdateProps(
@@ -33,10 +33,10 @@ data class CurrencyProfilePutRequest(
     ): UpdateCurrencyProfileProps = UpdateCurrencyProfileProps(
         id,
         userId,
-        name!!,
-        balance!!,
-        initDate!!,
-        goalMonthlySaving!!,
-        goalYearlySaving!!,
+        name !!,
+        balance !!,
+        initDate !!,
+        goalMonthlySaving !!,
+        goalYearlySaving !!,
     )
 }
