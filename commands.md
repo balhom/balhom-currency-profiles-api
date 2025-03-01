@@ -3,7 +3,7 @@
 * Project Creation
 
 ~~~
-mvn io.quarkus.platform:quarkus-maven-plugin:3.17.8:create -DprojectGroupId=org.balhom -DprojectArtifactId=balhom-currency-profiles-api -Dextensions='kotlin,rest-jackson'
+mvn io.quarkus.platform:quarkus-maven-plugin:3.19.1:create "-DprojectGroupId=org.balhom" "-DprojectArtifactId=balhom-currency-profiles-api" "-Dextensions=kotlin,rest-jackson"
 ~~~
 
 * Install Yaml Config Reader

@@ -14,16 +14,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.18.1</quarkus.platform.version>
+        <quarkus.platform.version>3.19.1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
         <rest-assured.version>5.5.0</rest-assured.version>
-        <vault.version>4.1.0</vault.version>
         <avro-maven-plugin.version>1.12.0</avro-maven-plugin.version>
         <amazon-s3.version>3.2.0</amazon-s3.version>
         <amazon-software.version>2.30.16</amazon-software.version>
-        <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
         <jackson.version>2.18.2</jackson.version>
+        <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
         <testcontainers.version>1.20.4</testcontainers.version>
         <testcontainers-keycloak.version>3.6.0</testcontainers-keycloak.version>
     </properties>
@@ -92,12 +91,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.quarkiverse.vault</groupId>
-            <artifactId>quarkus-vault</artifactId>
-            <version>${vault.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
             <version>${quarkus.platform.version}</version>
@@ -134,6 +127,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <version>${quarkus.platform.version}</version>
@@ -158,18 +163,6 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-kotlin</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
