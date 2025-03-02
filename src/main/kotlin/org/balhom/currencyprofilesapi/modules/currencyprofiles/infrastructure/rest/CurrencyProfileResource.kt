@@ -84,14 +84,14 @@ class CurrencyProfileResource(private val service: CurrencyProfileService) {
         @PathParam("id") id: UUID,
         @Valid request: CurrencyProfilePutRequest
     ): Response {
-        val updated = service.updateCurrencyProfile(
+        service.updateCurrencyProfile(
             request.toUpdateProps(
                 id,
                 UUID.fromString(jwt.subject)
             )
         )
         return Response
-            .ok(updated)
+            .noContent()
             .build()
     }
 

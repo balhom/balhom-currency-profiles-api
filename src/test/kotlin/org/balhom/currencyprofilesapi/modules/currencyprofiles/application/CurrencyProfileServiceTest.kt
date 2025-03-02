@@ -103,7 +103,7 @@ class CurrencyProfileServiceTest {
         verify(objectStorageClient)
             .uploadObject(any<FileData>())
         verify(currencyProfileRepository)
-            .update(currencyProfile)
+            .save(currencyProfile)
 
         assertNotNull(newPathCaptor.value)
     }

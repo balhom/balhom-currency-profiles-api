@@ -75,7 +75,7 @@ class CurrencyProfileService(
         )
 
         currencyProfileRepository
-            .update(currencyProfile)
+            .save(currencyProfile)
     }
 
     fun updateCurrencyProfile(props: UpdateCurrencyProfileProps): CurrencyProfile {
@@ -88,19 +88,18 @@ class CurrencyProfileService(
 
         currencyProfile.update(props)
 
-
         currencyProfileEventProducer
             .sendUpdateEvent(
                 currencyProfile
             )
 
         return currencyProfileRepository
-            .update(currencyProfile)
+            .save(currencyProfile)
     }
 
     fun updateCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {
         return currencyProfileRepository
-            .update(currencyProfile)
+            .save(currencyProfile)
     }
 
 

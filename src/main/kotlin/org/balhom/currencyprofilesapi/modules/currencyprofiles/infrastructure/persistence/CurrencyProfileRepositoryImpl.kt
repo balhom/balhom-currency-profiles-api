@@ -78,16 +78,7 @@ class CurrencyProfileRepositoryImpl(
             .fromDomain(currencyProfile)
 
         currencyProfileMongoRepository
-            .persist(entity)
-
-        return entity.toDomain(currencyProfileMongoRepository, objectStorageClient)
-    }
-
-    override fun update(currencyProfile: CurrencyProfile): CurrencyProfile {
-        val entity = CurrencyProfileMongoEntity.fromDomain(currencyProfile)
-
-        currencyProfileMongoRepository
-            .update(entity)
+            .persistOrUpdate(entity)
 
         return entity.toDomain(currencyProfileMongoRepository, objectStorageClient)
     }

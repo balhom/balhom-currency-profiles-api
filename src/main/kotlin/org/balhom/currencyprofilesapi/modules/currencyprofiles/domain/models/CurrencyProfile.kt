@@ -24,7 +24,7 @@ data class CurrencyProfile(
 ) {
     fun update(props: UpdateCurrencyProfileProps) {
         id = props.id
-        userId = props.id
+        userId = props.userId
         name = props.name
         balance = props.balance
         initDate = props.initDate

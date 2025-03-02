@@ -7,5 +7,6 @@ quarkus:
     cors: true
     limits:
       max-body-size: 700K
+    idle-timeout: 5m
   mongodb:
     uuid-representation: STANDARD

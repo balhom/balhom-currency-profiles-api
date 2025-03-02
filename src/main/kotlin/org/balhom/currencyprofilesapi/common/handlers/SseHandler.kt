@@ -1,5 +1,6 @@
 package org.balhom.currencyprofilesapi.common.handlers
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.quarkus.logging.Log
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.sse.Sse
@@ -14,6 +15,12 @@ class SseHandler(private val sse: Sse) {
     }
 
     private val subscriptions = ConcurrentHashMap<String, SseEventSink>()
+
+    private final val mapper = jacksonObjectMapper()
+
+    init {
+        mapper.findAndRegisterModules()
+    }
 
     fun addSink(
         userId: UUID,
@@ -34,16 +41,20 @@ class SseHandler(private val sse: Sse) {
         userId: UUID,
         data: Any
     ) {
-        Log.debug("Sending SSE event: $data")
+        val dataStr = mapper.writeValueAsString(data)
+
+        Log.debug("Sending SSE event: $dataStr")
 
         val userIdStr = userId.toString()
 
         // Check if a subscription already exists with this ID
         val existingSubscription = subscriptions[userIdStr] ?: return
 
-        if (! existingSubscription.isClosed) {
+        if (existingSubscription.isClosed) {
             // If the connection is already closed, delete the ID of the subscriptions
             subscriptions.remove(userIdStr)
+
+            Log.debug("SSE connection closed for user: $userIdStr")
             return
         }
 
@@ -51,12 +62,14 @@ class SseHandler(private val sse: Sse) {
             existingSubscription.send(
                 sse.newEventBuilder()
                     .name(EVENT_NAME)
-                    .data(data)
+                    .data(dataStr)
                     .build()
             )
         } catch (e: Exception) {
             // In case of error when sending, unsubscribe and report the problem
             subscriptions.remove(userIdStr)
+
+            existingSubscription.close()
 
             Log.debug("Error sending SSE event: $e")
         }

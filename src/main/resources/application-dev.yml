@@ -1,6 +1,6 @@
 quarkus:
   log:
-    level: INFO
+    level: DEBUG
   oidc:
     auth-server-url: http://localhost:7080/realms/balhom-realm
     client-id: balhom-client
