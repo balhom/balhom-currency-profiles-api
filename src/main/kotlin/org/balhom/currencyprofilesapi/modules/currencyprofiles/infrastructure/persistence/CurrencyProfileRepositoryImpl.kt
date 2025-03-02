@@ -1,5 +1,6 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.persistence
 
+import com.mongodb.client.model.Filters
 import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
@@ -18,11 +19,13 @@ class CurrencyProfileRepositoryImpl(
     override fun findByIdAndUserId(id: UUID, userId: UUID): CurrencyProfile? {
         return currencyProfileMongoRepository
             .find(
-                "_id = ?1 and "
-                        + CurrencyProfileMongoEntity.USER_ID_FIELD_NAME
-                        + " = ?2",
-                id,
-                userId
+                Filters.and(
+                    Filters.eq("_id", id),
+                    Filters.eq(
+                        CurrencyProfileMongoEntity.USER_ID_FIELD_NAME,
+                        userId
+                    ),
+                )
             )
             .firstResult()
             ?.toDomain(currencyProfileMongoRepository, objectStorageClient)
@@ -31,15 +34,19 @@ class CurrencyProfileRepositoryImpl(
     override fun findByIdAndUserIdOrSharedUserId(id: UUID, userId: UUID): CurrencyProfile? {
         return currencyProfileMongoRepository
             .find(
-                """{
-                "_id": ?1,
-                "${'$'}or": [
-                    { "${CurrencyProfileMongoEntity.USER_ID_FIELD_NAME}": ?2 },
-                    { "sharedUsers": { "${'$'}in": [?2] } }
-                ]
-            }""",
-                id,
-                userId
+                Filters.and(
+                    Filters.eq("_id", id),
+                    Filters.or(
+                        Filters.eq(
+                            CurrencyProfileMongoEntity.USER_ID_FIELD_NAME,
+                            userId
+                        ),
+                        Filters.`in`(
+                            CurrencyProfileMongoEntity.SHARED_USERS_FIELD_NAME,
+                            userId
+                        )
+                    )
+                )
             )
             .firstResult()
             ?.toDomain(currencyProfileMongoRepository, objectStorageClient)
@@ -50,13 +57,16 @@ class CurrencyProfileRepositoryImpl(
     ): List<CurrencyProfile> {
         return currencyProfileMongoRepository
             .find(
-                """{
-                "${'$'}or": [
-                    { "${CurrencyProfileMongoEntity.USER_ID_FIELD_NAME}": ?1 },
-                    { "sharedUsers": { "${'$'}in": [?1] } }
-                ]
-            }""",
-                userId
+                Filters.or(
+                    Filters.eq(
+                        CurrencyProfileMongoEntity.USER_ID_FIELD_NAME,
+                        userId
+                    ),
+                    Filters.`in`(
+                        CurrencyProfileMongoEntity.SHARED_USERS_FIELD_NAME,
+                        userId
+                    )
+                )
             )
             .list()
             .map { it.toDomain(currencyProfileMongoRepository, objectStorageClient) }
@@ -85,11 +95,13 @@ class CurrencyProfileRepositoryImpl(
     override fun delete(currencyProfile: CurrencyProfile) {
         currencyProfileMongoRepository
             .delete(
-                "_id = ?1 and "
-                        + CurrencyProfileMongoEntity.USER_ID_FIELD_NAME
-                        + " = ?2",
-                currencyProfile.id,
-                currencyProfile.userId
+                Filters.and(
+                    Filters.eq("_id", currencyProfile.id),
+                    Filters.eq(
+                        CurrencyProfileMongoEntity.USER_ID_FIELD_NAME,
+                        currencyProfile.userId
+                    ),
+                )
             )
     }
 }

@@ -71,6 +71,7 @@ data class CurrencyProfileMongoEntity(
         const val COLLECTION_NAME = "currencyProfiles"
 
         const val USER_ID_FIELD_NAME = "userId"
+        const val SHARED_USERS_FIELD_NAME = "sharedUsers"
 
         const val IMAGE_EXPIRATION_MINUTES = 600L
 
