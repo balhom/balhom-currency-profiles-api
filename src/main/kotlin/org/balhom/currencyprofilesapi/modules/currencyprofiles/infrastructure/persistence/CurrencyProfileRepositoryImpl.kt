@@ -73,6 +73,25 @@ class CurrencyProfileRepositoryImpl(
             .toList()
     }
 
+
+    override fun countByUserIdOrSharedUserId(
+        userId: UUID
+    ): Long {
+        return currencyProfileMongoRepository
+            .count(
+                Filters.or(
+                    Filters.eq(
+                        CurrencyProfileMongoEntity.USER_ID_FIELD_NAME,
+                        userId
+                    ),
+                    Filters.`in`(
+                        CurrencyProfileMongoEntity.SHARED_USERS_FIELD_NAME,
+                        userId
+                    )
+                )
+            )
+    }
+
     override fun save(currencyProfile: CurrencyProfile): CurrencyProfile {
         val entity = CurrencyProfileMongoEntity
             .fromDomain(currencyProfile)

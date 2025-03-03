@@ -6,12 +6,13 @@ import org.balhom.currencyprofilesapi.common.data.models.FileData
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.common.data.props.ObjectIdUserProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileNotFoundException
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfilesExceededException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileEventProducer
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UploadCurrencyProfileImageProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.repositories.CurrencyProfileRepository
-import java.util.UUID
+import java.util.*
 
 
 @ApplicationScoped
@@ -21,6 +22,8 @@ class CurrencyProfileService(
     private val objectStorageClient: ObjectStorageClient,
 ) {
     companion object {
+        const val MAX_ALLOWED_PER_USER = 10
+
         const val CURRENCY_PROFILE_PATH_PREFIX = "currency-profiles"
     }
 
@@ -35,6 +38,15 @@ class CurrencyProfileService(
 
     fun createCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {
         currencyProfile.validate()
+
+        // Check max allowed currency profiles per user
+        if (
+            currencyProfileRepository.countByUserIdOrSharedUserId(
+                currencyProfile.userId
+            ) >= MAX_ALLOWED_PER_USER
+        ) {
+            throw CurrencyProfilesExceededException()
+        }
 
         currencyProfileEventProducer
             .sendCreateEvent(
@@ -52,7 +64,7 @@ class CurrencyProfileService(
 
         if (currencyProfile.imageData?.filePath != null) {
             objectStorageClient.deleteObject(
-                currencyProfile.imageData !!.filePath
+                currencyProfile.imageData!!.filePath
             )
         }
 
