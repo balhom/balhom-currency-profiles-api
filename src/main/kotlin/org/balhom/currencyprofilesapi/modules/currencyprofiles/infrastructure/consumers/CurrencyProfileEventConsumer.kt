@@ -15,8 +15,15 @@ class CurrencyProfileEventConsumer(
         Log.debug("Consuming Kafka currency profile event: " + event.id)
 
         sseHandler.sendMessage(
-            event.userId,
+            event.ownerId,
             event
         )
+
+        event.sharedUsers.forEach {
+            sseHandler.sendMessage(
+                it.id,
+                event
+            )
+        }
     }
 }
