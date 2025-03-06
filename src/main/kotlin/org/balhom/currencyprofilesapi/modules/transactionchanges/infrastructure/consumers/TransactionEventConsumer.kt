@@ -2,7 +2,7 @@ package org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure
 
 import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.modules.transactionchanges.application.TransactionChangesService
-import org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure.consumers.data.TransactionEvent
+import org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure.consumers.data.TransactionChangeEvent
 import org.eclipse.microprofile.reactive.messaging.Incoming
 
 @ApplicationScoped
@@ -11,7 +11,7 @@ class TransactionEventConsumer(
 ) {
 
     @Incoming("transaction-events")
-    fun receive(event: TransactionEvent) {
+    fun receive(event: TransactionChangeEvent) {
         transactionChangesService
             .processChange(
                 event.toChangeProps()

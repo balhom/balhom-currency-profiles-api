@@ -4,7 +4,7 @@ import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props.TransactionChangeProps
 import java.util.UUID
 
-data class TransactionEvent(
+data class TransactionChangeEvent(
     val action: String,
     val id: UUID,
     val balance: Double,
