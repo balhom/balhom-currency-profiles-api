@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.common.clients.idp.IdpAdminClient
 import org.balhom.currencyprofilesapi.common.data.models.IdpUser
 import org.balhom.currencyprofilesapi.common.data.props.ObjectIdUserProps
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileSharedUsersExceededException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileUserNotFoundException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfileSharedUser
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.AddCurrencyProfileSharedUserProps
@@ -18,9 +17,6 @@ class CurrencyProfileSharedUserService(
     private val idpAdminClient: IdpAdminClient
 ) {
 
-    companion object {
-        const val MAX_ALLOWED_SHARED_USERS = 5
-    }
 
     fun getAllCurrencyProfileSharedUsers(
         props: ObjectIdUserProps
@@ -49,10 +45,6 @@ class CurrencyProfileSharedUserService(
             )
         )
 
-        if (currencyProfile.sharedUsers.size >= MAX_ALLOWED_SHARED_USERS) {
-            throw CurrencyProfileSharedUsersExceededException()
-        }
-
         // Add idp user id as shared user if it is not already in it
         if (! currencyProfile.sharedUsers.any { it.id == idpUser.id }) {
             currencyProfile
@@ -64,6 +56,8 @@ class CurrencyProfileSharedUserService(
                     )
                 )
         }
+
+        currencyProfile.validate()
 
         currencyProfileService.updateCurrencyProfile(
             currencyProfile
