@@ -1,4 +1,4 @@
-package org.balhom.currencyprofilesapi.modules.transactions.domain.props
+package org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props
 
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import java.util.UUID

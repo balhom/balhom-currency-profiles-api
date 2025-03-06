@@ -1,7 +1,7 @@
-package org.balhom.currencyprofilesapi.modules.transactions.infrastructure.consumers.data
+package org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure.consumers.data
 
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
-import org.balhom.currencyprofilesapi.modules.transactions.domain.props.TransactionChangeProps
+import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props.TransactionChangeProps
 import java.util.UUID
 
 data class TransactionEvent(
