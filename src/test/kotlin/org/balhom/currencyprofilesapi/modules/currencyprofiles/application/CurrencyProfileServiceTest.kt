@@ -4,7 +4,7 @@ import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.common.data.models.FileData
 import org.balhom.currencyprofilesapi.common.data.models.MockFileReferenceDataFactory
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.MockCurrencyProfileFactory
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileEventProducer
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileChangeEventProducer
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.MockUploadCurrencyProfileImagePropsFactory
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.repositories.CurrencyProfileRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -24,7 +24,7 @@ import java.util.UUID
 class CurrencyProfileServiceTest {
 
     private lateinit var currencyProfileRepository: CurrencyProfileRepository
-    private lateinit var currencyProfileEventProducer: CurrencyProfileEventProducer
+    private lateinit var currencyProfileChangeEventProducer: CurrencyProfileChangeEventProducer
     private lateinit var objectStorageClient: ObjectStorageClient
 
     private lateinit var currencyProfileService: CurrencyProfileService
@@ -34,8 +34,8 @@ class CurrencyProfileServiceTest {
         currencyProfileRepository = mock(
             CurrencyProfileRepository::class.java
         )
-        currencyProfileEventProducer = mock(
-            CurrencyProfileEventProducer::class.java
+        currencyProfileChangeEventProducer = mock(
+            CurrencyProfileChangeEventProducer::class.java
         )
         objectStorageClient = mock(
             ObjectStorageClient::class.java
@@ -43,7 +43,7 @@ class CurrencyProfileServiceTest {
 
         currencyProfileService = CurrencyProfileService(
             currencyProfileRepository,
-            currencyProfileEventProducer,
+            currencyProfileChangeEventProducer,
             objectStorageClient
         )
     }

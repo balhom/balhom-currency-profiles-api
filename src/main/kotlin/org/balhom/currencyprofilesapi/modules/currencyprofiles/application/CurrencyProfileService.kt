@@ -8,7 +8,7 @@ import org.balhom.currencyprofilesapi.common.data.props.ObjectIdUserProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileNotFoundException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfilesExceededException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileEventProducer
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileChangeEventProducer
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UploadCurrencyProfileImageProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.repositories.CurrencyProfileRepository
@@ -18,7 +18,7 @@ import java.util.*
 @ApplicationScoped
 class CurrencyProfileService(
     private val currencyProfileRepository: CurrencyProfileRepository,
-    private val currencyProfileEventProducer: CurrencyProfileEventProducer,
+    private val currencyProfileChangeEventProducer: CurrencyProfileChangeEventProducer,
     private val objectStorageClient: ObjectStorageClient,
 ) {
     companion object {
@@ -48,7 +48,7 @@ class CurrencyProfileService(
             throw CurrencyProfilesExceededException()
         }
 
-        currencyProfileEventProducer
+        currencyProfileChangeEventProducer
             .sendCreateEvent(
                 currencyProfile
             )
@@ -100,7 +100,7 @@ class CurrencyProfileService(
 
         currencyProfile.update(props)
 
-        currencyProfileEventProducer
+        currencyProfileChangeEventProducer
             .sendUpdateEvent(
                 currencyProfile
             )
@@ -122,7 +122,7 @@ class CurrencyProfileService(
                 props.userId
             ) ?: throw CurrencyProfileNotFoundException()
 
-        currencyProfileEventProducer
+        currencyProfileChangeEventProducer
             .sendDeleteEvent(
                 currencyProfile
             )

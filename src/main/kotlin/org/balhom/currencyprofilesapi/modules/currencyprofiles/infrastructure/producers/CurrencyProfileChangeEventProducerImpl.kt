@@ -3,16 +3,16 @@ package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.p
 import io.quarkus.logging.Log
 import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileEventProducer
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.producers.data.CurrencyProfileEvent
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileChangeEventProducer
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.producers.data.CurrencyProfileChangeEvent
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 
 @ApplicationScoped
-class CurrencyProfileEventProducerImpl(
-    @Channel("currency-profile-events-out") private val emitter: Emitter<CurrencyProfileEvent>
-) : CurrencyProfileEventProducer {
-    fun send(event: CurrencyProfileEvent) {
+class CurrencyProfileChangeEventProducerImpl(
+    @Channel("currency-profile-events-out") private val emitter: Emitter<CurrencyProfileChangeEvent>
+) : CurrencyProfileChangeEventProducer {
+    fun send(event: CurrencyProfileChangeEvent) {
         Log.debug("Producing Kafka currency profile event: " + event.id)
 
         emitter
@@ -23,7 +23,7 @@ class CurrencyProfileEventProducerImpl(
 
     override fun sendCreateEvent(currencyProfile: CurrencyProfile) {
         send(
-            CurrencyProfileEvent(
+            CurrencyProfileChangeEvent(
                 "C",
                 currencyProfile.id,
                 currencyProfile.balance,
@@ -37,7 +37,7 @@ class CurrencyProfileEventProducerImpl(
 
     override fun sendUpdateEvent(currencyProfile: CurrencyProfile) {
         send(
-            CurrencyProfileEvent(
+            CurrencyProfileChangeEvent(
                 "U",
                 currencyProfile.id,
                 currencyProfile.balance,
@@ -51,7 +51,7 @@ class CurrencyProfileEventProducerImpl(
 
     override fun sendDeleteEvent(currencyProfile: CurrencyProfile) {
         send(
-            CurrencyProfileEvent(
+            CurrencyProfileChangeEvent(
                 "D",
                 currencyProfile.id,
                 currencyProfile.balance,

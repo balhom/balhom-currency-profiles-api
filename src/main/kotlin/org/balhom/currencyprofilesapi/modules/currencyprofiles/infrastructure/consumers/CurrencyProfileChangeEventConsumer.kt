@@ -3,15 +3,15 @@ package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.c
 import io.quarkus.logging.Log
 import jakarta.enterprise.context.ApplicationScoped
 import org.balhom.currencyprofilesapi.common.handlers.SseHandler
-import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.producers.data.CurrencyProfileEvent
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.producers.data.CurrencyProfileChangeEvent
 import org.eclipse.microprofile.reactive.messaging.Incoming
 
 @ApplicationScoped
-class CurrencyProfileEventConsumer(
+class CurrencyProfileChangeEventConsumer(
     private val sseHandler: SseHandler
 ) {
     @Incoming("currency-profile-events-in")
-    fun receive(event: CurrencyProfileEvent) {
+    fun receive(event: CurrencyProfileChangeEvent) {
         Log.debug("Consuming Kafka currency profile event: " + event.id)
 
         sseHandler.sendMessage(
