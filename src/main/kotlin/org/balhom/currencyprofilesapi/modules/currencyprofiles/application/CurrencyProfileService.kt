@@ -1,6 +1,7 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.application
 
 import jakarta.enterprise.context.ApplicationScoped
+import org.balhom.currencyprofilesapi.common.clients.idp.IdpAdminClient
 import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.common.data.models.FileData
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
@@ -12,7 +13,7 @@ import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UploadCurrencyProfileImageProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.repositories.CurrencyProfileRepository
-import java.util.*
+import java.util.UUID
 
 
 @ApplicationScoped
@@ -20,6 +21,7 @@ class CurrencyProfileService(
     private val currencyProfileRepository: CurrencyProfileRepository,
     private val currencyProfileChangeEventProducer: CurrencyProfileChangeEventProducer,
     private val objectStorageClient: ObjectStorageClient,
+    private val idpAdminClient: IdpAdminClient,
 ) {
     companion object {
         const val MAX_ALLOWED_PER_USER = 10
@@ -49,9 +51,7 @@ class CurrencyProfileService(
         }
 
         currencyProfileChangeEventProducer
-            .sendCreateEvent(
-                currencyProfile
-            )
+            .sendCreateEvent(currencyProfile)
 
         return currencyProfileRepository
             .save(currencyProfile)
@@ -64,7 +64,7 @@ class CurrencyProfileService(
 
         if (currencyProfile.imageData?.filePath != null) {
             objectStorageClient.deleteObject(
-                currencyProfile.imageData!!.filePath
+                currencyProfile.imageData !!.filePath
             )
         }
 
@@ -101,9 +101,7 @@ class CurrencyProfileService(
         currencyProfile.update(props)
 
         currencyProfileChangeEventProducer
-            .sendUpdateEvent(
-                currencyProfile
-            )
+            .sendUpdateEvent(currencyProfile)
 
         return currencyProfileRepository
             .save(currencyProfile)
@@ -114,7 +112,6 @@ class CurrencyProfileService(
             .save(currencyProfile)
     }
 
-
     fun deleteCurrencyProfile(props: ObjectIdUserProps) {
         val currencyProfile = currencyProfileRepository
             .findByIdAndUserId(
@@ -122,12 +119,43 @@ class CurrencyProfileService(
                 props.userId
             ) ?: throw CurrencyProfileNotFoundException()
 
+        handleCurrencyProfileDelete(currencyProfile)
+    }
+
+    private fun handleCurrencyProfileDelete(currencyProfile: CurrencyProfile) {
         currencyProfileChangeEventProducer
-            .sendDeleteEvent(
-                currencyProfile
+            .sendDeleteEvent(currencyProfile)
+
+        if (currencyProfile.imageData?.filePath != null) {
+            objectStorageClient.deleteObject(
+                currencyProfile.imageData !!.filePath
             )
+        }
 
         currencyProfileRepository
             .delete(currencyProfile)
+    }
+
+    fun deleteAllCurrencyProfiles(userId: UUID) {
+        val currencyProfiles = currencyProfileRepository
+            .findAllByUserIdOrSharedUserId(userId)
+
+        for (currencyProfile in currencyProfiles) {
+            // If userId is the currency profile owner then profile must be deleted
+            if (currencyProfile.userId == userId) {
+                handleCurrencyProfileDelete(currencyProfile)
+            }
+            // If userId is a shared user then its reference must be deleted
+            else {
+                currencyProfile
+                    .sharedUsers
+                    .removeIf({ it.id == userId })
+
+                currencyProfileRepository
+                    .save(currencyProfile)
+            }
+        }
+
+        idpAdminClient.deleteUser(userId)
     }
 }

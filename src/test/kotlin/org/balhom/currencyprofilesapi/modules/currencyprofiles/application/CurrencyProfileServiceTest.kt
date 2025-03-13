@@ -1,5 +1,6 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.application
 
+import org.balhom.currencyprofilesapi.common.clients.idp.IdpAdminClient
 import org.balhom.currencyprofilesapi.common.clients.storage.ObjectStorageClient
 import org.balhom.currencyprofilesapi.common.data.models.FileData
 import org.balhom.currencyprofilesapi.common.data.models.MockFileReferenceDataFactory
@@ -26,6 +27,7 @@ class CurrencyProfileServiceTest {
     private lateinit var currencyProfileRepository: CurrencyProfileRepository
     private lateinit var currencyProfileChangeEventProducer: CurrencyProfileChangeEventProducer
     private lateinit var objectStorageClient: ObjectStorageClient
+    private lateinit var idpAdminClient: IdpAdminClient
 
     private lateinit var currencyProfileService: CurrencyProfileService
 
@@ -40,11 +42,15 @@ class CurrencyProfileServiceTest {
         objectStorageClient = mock(
             ObjectStorageClient::class.java
         )
+        idpAdminClient = mock(
+            IdpAdminClient::class.java
+        )
 
         currencyProfileService = CurrencyProfileService(
             currencyProfileRepository,
             currencyProfileChangeEventProducer,
-            objectStorageClient
+            objectStorageClient,
+            idpAdminClient
         )
     }
 

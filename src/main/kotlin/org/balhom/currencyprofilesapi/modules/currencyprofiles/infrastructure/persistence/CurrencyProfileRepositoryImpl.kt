@@ -73,7 +73,6 @@ class CurrencyProfileRepositoryImpl(
             .toList()
     }
 
-
     override fun countByUserIdOrSharedUserId(
         userId: UUID
     ): Long {

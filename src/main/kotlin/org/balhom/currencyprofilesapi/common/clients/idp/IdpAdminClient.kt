@@ -7,4 +7,6 @@ interface IdpAdminClient {
     fun getUserByEmail(email: String): IdpUser?
 
     fun getUserById(id: UUID): IdpUser?
+
+    fun deleteUser(userId: UUID)
 }

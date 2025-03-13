@@ -40,4 +40,7 @@ class IdpAdminClientImpl(
             userRepresentation.email
         )
     }
+
+    override fun deleteUser(userId: UUID) =
+            keycloakAdminClient.deleteUser(userId)
 }

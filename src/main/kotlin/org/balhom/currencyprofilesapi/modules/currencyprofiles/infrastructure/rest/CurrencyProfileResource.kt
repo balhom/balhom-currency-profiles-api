@@ -109,4 +109,14 @@ class CurrencyProfileResource(private val service: CurrencyProfileService) {
             .build()
     }
 
+    @DELETE
+    fun deleteAll(): Response {
+        service.deleteAllCurrencyProfiles(
+            UUID.fromString(jwt.subject)
+        )
+        return Response
+            .noContent()
+            .build()
+    }
+
 }

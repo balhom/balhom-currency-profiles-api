@@ -1,7 +1,10 @@
 package org.balhom.currencyprofilesapi.common.clients.idp
 
+import io.quarkus.logging.Log
 import jakarta.annotation.PostConstruct
 import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.core.Response
+import org.balhom.currencyprofilesapi.common.clients.idp.exceptions.CannotDeleteKeycloakUserException
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.resteasy.reactive.ClientWebApplicationException
 import org.keycloak.OAuth2Constants
@@ -59,5 +62,21 @@ class KeycloakAdminClient(
                 userEmail,
                 true
             ).firstOrNull()
+    }
+
+    fun deleteUser(userId: UUID) {
+        val usersResource: UsersResource = getUsersResource()
+
+        val response: Response = usersResource.delete(userId.toString())
+        val responseStatusInfo: Response.StatusType = response.getStatusInfo()
+
+        if (Response.Status.NO_CONTENT != responseStatusInfo) {
+            Log.error(
+                "Unexpected result while trying to delete user: ${userId}," +
+                        " status: ${responseStatusInfo.statusCode}," +
+                        " reason: ${responseStatusInfo.reasonPhrase}"
+            )
+            throw CannotDeleteKeycloakUserException()
+        }
     }
 }
