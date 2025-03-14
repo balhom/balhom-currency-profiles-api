@@ -2,7 +2,7 @@ package org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure
 
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props.TransactionChangeProps
-import java.util.*
+import java.util.UUID
 
 data class TransactionChangeEvent(
     val action: String,
