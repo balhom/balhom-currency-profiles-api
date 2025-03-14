@@ -70,7 +70,7 @@ class KeycloakAdminClient(
         val response: Response = usersResource.delete(userId.toString())
         val responseStatusInfo: Response.StatusType = response.getStatusInfo()
 
-        if (Response.Status.NO_CONTENT != responseStatusInfo) {
+        if (Response.Status.NO_CONTENT.statusCode != responseStatusInfo.statusCode) {
             Log.error(
                 "Unexpected result while trying to delete user: ${userId}," +
                         " status: ${responseStatusInfo.statusCode}," +
