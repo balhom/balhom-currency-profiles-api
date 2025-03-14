@@ -6,7 +6,7 @@ import org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure.
 import org.eclipse.microprofile.reactive.messaging.Incoming
 
 @ApplicationScoped
-class TransactionEventConsumer(
+class TransactionChangeEventConsumer(
     private val transactionChangesService: TransactionChangesService
 ) {
 

@@ -108,6 +108,9 @@ class CurrencyProfileService(
     }
 
     fun updateCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {
+        currencyProfileChangeEventProducer
+            .sendUpdateEvent(currencyProfile)
+
         return currencyProfileRepository
             .save(currencyProfile)
     }
