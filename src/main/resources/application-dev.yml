@@ -20,6 +20,7 @@ quarkus:
       type: apache
     devservices:
       enabled: true
+      shared: true
       buckets: balhom-currency-api-bucket
     bucket:
       name: balhom-currency-api-bucket
