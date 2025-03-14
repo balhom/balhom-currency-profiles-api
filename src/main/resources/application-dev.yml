@@ -16,19 +16,11 @@ quarkus:
     path: /swagger
 
   s3:
-    endpoint-override: http://localhost:9090
-    path-style-access: true
     sync-client:
       type: apache
-    aws:
-      region: us-west-2
-      credentials:
-        type: static
-        static-provider:
-          access-key-id: admin
-          secret-access-key: password
     devservices:
-      enabled: false
+      enabled: true
+      buckets: balhom-currency-api-bucket
     bucket:
       name: balhom-currency-api-bucket
 

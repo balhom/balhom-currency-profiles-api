@@ -26,8 +26,6 @@ abstract class BaseTestContainersTest {
             )
         )
 
-        private val s3Container = S3TestContainer()
-
         private val keycloakContainer = KeycloakContainer(
             "keycloak/keycloak:26.1"
         ).withRealmImportFile("keycloak/realm-export.json")
@@ -37,7 +35,6 @@ abstract class BaseTestContainersTest {
         fun startContainers() {
             mongoContainer.start()
             kafkaContainer.start()
-            s3Container.start()
             keycloakContainer.start()
 
             // MongoDB Section
@@ -50,29 +47,6 @@ abstract class BaseTestContainersTest {
             System.setProperty(
                 "kafka.bootstrap.servers",
                 kafkaContainer.bootstrapServers
-            )
-
-            // S3 Section
-            System.setProperty(
-                "quarkus.s3.endpoint-override",
-                s3Container.getEndpointOverride(LocalStackContainer.Service.S3)
-                    .toString()
-            )
-            System.setProperty(
-                "quarkus.s3.sync-client.type",
-                "apache"
-            )
-            System.setProperty(
-                "quarkus.s3.aws.region",
-                s3Container.region
-            )
-            System.setProperty(
-                "quarkus.s3.aws.credentials.access-key-id",
-                s3Container.accessKey
-            )
-            System.setProperty(
-                "quarkus.s3.aws.credentials.secret-access-key",
-                s3Container.secretKey
             )
 
             // Keycloak Section
@@ -89,10 +63,7 @@ abstract class BaseTestContainersTest {
         @AfterAll
         @JvmStatic
         fun stopContainers() {
-            mongoContainer.stop()
-            kafkaContainer.stop()
-            s3Container.stop()
-            keycloakContainer.stop()
+            // Avoid stop for reuse
         }
     }
 }

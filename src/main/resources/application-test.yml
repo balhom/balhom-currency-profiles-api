@@ -7,6 +7,11 @@ quarkus:
       type: apache
     aws:
       region: us-west-2
+      credentials:
+        type: static
+        static-provider:
+          access-key-id: test
+          secret-access-key: test
     devservices:
       enabled: false
     bucket:
