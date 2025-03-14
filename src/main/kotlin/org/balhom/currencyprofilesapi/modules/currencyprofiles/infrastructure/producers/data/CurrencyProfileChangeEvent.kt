@@ -6,9 +6,9 @@ import java.util.UUID
 data class CurrencyProfileChangeEvent(
     val action: String,
     val id: UUID,
-    var balance: Double,
+    val balance: Double,
     val monthlyGoal: Double,
-    var yearlyGoal: Double,
+    val yearlyGoal: Double,
     val ownerId: UUID,
-    var sharedUsers: MutableList<CurrencyProfileSharedUser>,
+    val sharedUsers: MutableList<CurrencyProfileSharedUser>,
 )
