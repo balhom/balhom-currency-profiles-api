@@ -18,7 +18,6 @@
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
         <rest-assured.version>5.5.0</rest-assured.version>
-        <avro-maven-plugin.version>1.12.0</avro-maven-plugin.version>
         <amazon-s3.version>3.2.0</amazon-s3.version>
         <amazon-software.version>2.30.16</amazon-software.version>
         <jackson.version>2.18.2</jackson.version>
