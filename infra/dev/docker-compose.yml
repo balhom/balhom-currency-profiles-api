@@ -21,9 +21,6 @@ services:
       - KEYCLOAK_MANAGEMENT_PASSWORD=password
       - KEYCLOAK_INIT_REALM=balhom-realm
       - KEYCLOAK_INIT_CLIENT=balhom-client
-      - KEYCLOAK_INIT_MAILHOG_HOST=balhom-currency-profiles-api-keycloak-mailhog
-      - KEYCLOAK_INIT_SMTP_SENDER=sender@balhom.com
-      - KEYCLOAK_INIT_SMTP_RECEIVER=reciever@balhom.com
       - KEYCLOAK_INIT_USER=test@balhom.com
       - KEYCLOAK_INIT_USER_PASSWORD=password
       - KEYCLOAK_INIT_API_CLIENT=balhom-api-client
