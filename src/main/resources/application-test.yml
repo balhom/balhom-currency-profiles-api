@@ -1,21 +1,16 @@
 quarkus:
   mongodb:
     database: balHomCurrencyDB
+
   s3:
-    path-style-access: true
     sync-client:
       type: apache
-    aws:
-      region: us-west-2
-      credentials:
-        type: static
-        static-provider:
-          access-key-id: test
-          secret-access-key: test
     devservices:
-      enabled: false
+      enabled: true
+      shared: true
+      buckets: balhom-currency-api-bucket
     bucket:
-      name: test-bucket
+      name: balhom-currency-api-bucket
 
   rest-client:
     keycloak-admin-api:
