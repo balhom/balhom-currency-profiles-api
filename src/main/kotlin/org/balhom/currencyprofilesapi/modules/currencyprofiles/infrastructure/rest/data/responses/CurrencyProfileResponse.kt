@@ -1,6 +1,7 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.rest.data.responses
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import org.balhom.currencyprofilesapi.common.config.TimeConfig
 import org.balhom.currencyprofilesapi.common.data.enums.CurrencyCodeEnum
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
@@ -12,7 +13,7 @@ data class CurrencyProfileResponse(
     val name: String,
     val currencyCode: CurrencyCodeEnum,
     val balance: Double,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeConfig.DATE_ISO_FORMAT)
     val initDate: LocalDate,
     val goalMonthlySaving: Double,
     val goalYearlySaving: Double,

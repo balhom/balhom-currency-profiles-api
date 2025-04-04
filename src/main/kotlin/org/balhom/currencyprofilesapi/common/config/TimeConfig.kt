@@ -8,7 +8,11 @@ import java.util.TimeZone
 
 
 @Singleton
-class TimezoneConfig {
+class TimeConfig {
+    companion object {
+        const val DATE_ISO_FORMAT = "yyyy-MM-dd"
+    }
+
     fun setTimezone(@Observes startupEvent: StartupEvent?) {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
         Log.info("Using UTC Timezone")
