@@ -29,6 +29,8 @@ quarkus:
           secret-access-key: password
     devservices:
       enabled: false
+    bucket:
+      name: balhom-currency-profiles-api-bucket
 
 kafka:
   bootstrap:
