@@ -28,7 +28,7 @@ quarkus:
     devservices:
       enabled: false
     bucket:
-      name: ${S3_BUCKET_NAME:balhom-currency-api-bucket}
+      name: ${S3_BUCKET_NAME:balhom-bucket}
 
 kafka:
   bootstrap:
