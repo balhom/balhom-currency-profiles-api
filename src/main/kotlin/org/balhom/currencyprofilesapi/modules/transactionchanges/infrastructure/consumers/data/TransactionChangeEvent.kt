@@ -2,13 +2,14 @@ package org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure
 
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props.TransactionChangeProps
-import java.util.UUID
+import java.math.BigDecimal
+import java.util.*
 
 data class TransactionChangeEvent(
     val action: String,
     val id: UUID,
-    val amount: Double,
-    val oldAmount: Double?,
+    val amount: BigDecimal,
+    val oldAmount: BigDecimal?,
     val currencyProfileId: UUID,
     val userId: UUID,
 ) {
@@ -18,7 +19,7 @@ data class TransactionChangeEvent(
             id,
             currencyProfileId,
             userId,
-            amount - (oldAmount ?: 0.0)
+            amount - (oldAmount ?: BigDecimal(0.0))
         )
     }
 }

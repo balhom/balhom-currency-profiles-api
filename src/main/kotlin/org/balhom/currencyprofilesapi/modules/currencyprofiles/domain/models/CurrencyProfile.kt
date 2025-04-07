@@ -6,19 +6,20 @@ import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileSharedUsersExceededException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.InvalidCurrencyProfileInitDateException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 data class CurrencyProfile(
     var id: UUID,
     var userId: UUID,
     var name: String,
     var currencyCode: CurrencyCodeEnum,
-    var balance: Double,
+    var balance: BigDecimal,
     var initDate: LocalDate,
-    var goalMonthlySaving: Double,
-    var goalYearlySaving: Double,
+    var goalMonthlySaving: BigDecimal,
+    var goalYearlySaving: BigDecimal,
     var imageData: FileReferenceData?,
     var sharedUsers: MutableList<CurrencyProfileSharedUser>,
     var auditableData: AuditableData,

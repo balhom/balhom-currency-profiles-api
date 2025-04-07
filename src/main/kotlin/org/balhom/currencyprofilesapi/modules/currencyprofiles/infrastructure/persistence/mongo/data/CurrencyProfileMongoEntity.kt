@@ -7,9 +7,10 @@ import org.balhom.currencyprofilesapi.common.data.models.AuditableData
 import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.persistence.mongo.CurrencyProfileMongoRepository
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @MongoEntity(collection = CurrencyProfileMongoEntity.COLLECTION_NAME)
 data class CurrencyProfileMongoEntity(
@@ -17,20 +18,20 @@ data class CurrencyProfileMongoEntity(
     var userId: UUID,
     var name: String,
     var currencyCode: CurrencyCodeEnum,
-    var balance: Double,
+    var balance: BigDecimal,
     var initDate: LocalDate,
-    var goalMonthlySaving: Double,
-    var goalYearlySaving: Double,
+    var goalMonthlySaving: BigDecimal,
+    var goalYearlySaving: BigDecimal,
     var imageData: FileReferenceData?,
     var sharedUsers: MutableList<CurrencyProfileSharedUserMongoEntity>,
     var auditableData: AuditableData,
 ) {
     private fun updateImageData(objectStorageClient: ObjectStorageClient) {
-        imageData !!.url = objectStorageClient.getObjectUrl(
-            imageData !!.filePath,
+        imageData!!.url = objectStorageClient.getObjectUrl(
+            imageData!!.filePath,
             IMAGE_EXPIRATION_MINUTES
         )
-        imageData !!.expiration = LocalDateTime.now()
+        imageData!!.expiration = LocalDateTime.now()
             .plusMinutes(IMAGE_EXPIRATION_MINUTES)
     }
 
@@ -39,13 +40,13 @@ data class CurrencyProfileMongoEntity(
         objectStorageClient: ObjectStorageClient,
     ): CurrencyProfile {
         if (imageData?.filePath != null) {
-            if (! objectStorageClient.doesObjectExist(imageData !!.filePath)) {
+            if (!objectStorageClient.doesObjectExist(imageData!!.filePath)) {
                 imageData = null
             } else if (
                 (imageData?.url == null)
                 || (
                         imageData?.expiration != null
-                                && imageData !!.expiration !!.isBefore(LocalDateTime.now()))
+                                && imageData!!.expiration!!.isBefore(LocalDateTime.now()))
             ) {
                 updateImageData(objectStorageClient)
                 currencyProfileMongoRepository.update(this)

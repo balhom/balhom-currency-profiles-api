@@ -1,10 +1,12 @@
 package org.balhom.currencyprofilesapi.common.utils
 
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.concurrent.ThreadLocalRandom
+import java.util.concurrent.*
 import kotlin.random.Random
 
 
@@ -29,6 +31,16 @@ class TestDataUtils {
 
         fun randomDouble(min: Double, max: Double): Double {
             return Random.nextDouble(max - min) + min
+        }
+
+        fun randomBigDecimal(): BigDecimal {
+            return BigDecimal(randomDouble())
+                .setScale(2, RoundingMode.HALF_UP)
+        }
+
+        fun randomBigDecimal(min: Double, max: Double): BigDecimal {
+            return BigDecimal(randomDouble(min, max))
+                .setScale(2, RoundingMode.HALF_UP)
         }
 
         fun randomText(): String {
