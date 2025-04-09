@@ -12,12 +12,6 @@ quarkus:
     bucket:
       name: balhom-currency-api-bucket
 
-  rest-client:
-    keycloak-admin-api:
-      mp-rest:
-        url: http://test
-        scope: javax.inject.Singleton
-
 mp:
   messaging:
     outgoing:
