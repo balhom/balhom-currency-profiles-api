@@ -1,15 +1,19 @@
 quarkus:
   log:
     level: INFO
+
   oidc:
     auth-server-url: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM:balhom-realm}
     client-id: ${KEYCLOAK_CLIENT_ID:balhom-client}
     application-type: service
+
   mongodb:
     connection-string: ${MONGODB_URL}
     database: ${MONGODB_DB:balHomCurrencyDB}
+
   smallrye-openapi:
     enable: false
+
   swagger-ui:
     enable: false
 
