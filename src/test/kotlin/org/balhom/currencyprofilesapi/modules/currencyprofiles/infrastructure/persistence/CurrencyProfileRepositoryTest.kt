@@ -29,6 +29,7 @@ class CurrencyProfileRepositoryTest : BaseTestContainersTest() {
     fun `save with valid data should store a Currency Profile`() {
         val expectedCurrencyProfile = MockCurrencyProfileFactory
             .create()
+        expectedCurrencyProfile.imageData = null
 
         currencyProfileRepository.save(
             expectedCurrencyProfile

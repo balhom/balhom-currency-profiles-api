@@ -24,6 +24,10 @@ RUN chown 1001 /work \
     && chown 1001:root /work
 COPY --chown=1001:root target/*-runner /work/application
 
+ENV LANGUAGE='en_US:en'
+ENV TZ=UTC
+ENV QUARKUS_PROFILE=prod
+
 EXPOSE 8081
 USER 1001
 
