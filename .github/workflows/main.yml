@@ -35,7 +35,7 @@ jobs:
         run: mvn dependency:resolve
 
       - name: Build
-        run: mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true -Dquarkus.native.container-runtime=docker
+        run: mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true
 
       - name: Run tests
         run: |
@@ -56,7 +56,7 @@ jobs:
           IMAGE_TAG="${DOCKER_REPO_NAME}:${APP_VERSION}"
           LATEST_TAG="${DOCKER_REPO_NAME}:latest"
           
-          docker build -f src/main/docker/Dockerfile.native -t ${IMAGE_TAG} .
+          docker build -f src/main/docker/Dockerfile.native-micro -t ${IMAGE_TAG} .
           docker tag ${IMAGE_TAG} ${LATEST_TAG}
           
           docker push ${IMAGE_TAG}
