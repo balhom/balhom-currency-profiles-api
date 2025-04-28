@@ -36,10 +36,7 @@ jobs:
 
       - name: Build
         run: |
-          export GOOS=linux
-          export GOARCH=amd64
-          export CGO_ENABLED=0
-          mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true
+          mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.3-java17
 
       - name: Run tests
         run: |
@@ -60,7 +57,7 @@ jobs:
           IMAGE_TAG="${DOCKER_REPO_NAME}:${APP_VERSION}"
           LATEST_TAG="${DOCKER_REPO_NAME}:latest"
           
-          docker build -f src/main/docker/Dockerfile.native -t ${IMAGE_TAG} .
+          docker build -f src/main/docker/Dockerfile.native-micro -t ${IMAGE_TAG} .
           docker tag ${IMAGE_TAG} ${LATEST_TAG}
           
           docker push ${IMAGE_TAG}
