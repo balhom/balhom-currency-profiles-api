@@ -35,7 +35,11 @@ jobs:
         run: mvn dependency:resolve
 
       - name: Build
-        run: mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true
+        run: |
+          export GOOS=linux
+          export GOARCH=amd64
+          export CGO_ENABLED=0
+          mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true
 
       - name: Run tests
         run: |
