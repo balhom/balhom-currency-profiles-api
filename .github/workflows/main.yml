@@ -35,7 +35,7 @@ jobs:
         run: mvn dependency:resolve
 
       - name: Build
-        run: mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true
+        run: mvn package -B -DskipTests -Pnative -Dquarkus.native.container-build=true -Dquarkus.native.container-runtime=docker
 
       - name: Run tests
         run: |
