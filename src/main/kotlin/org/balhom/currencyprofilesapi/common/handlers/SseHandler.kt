@@ -59,7 +59,6 @@ class SseHandler(private val sse: Sse) {
         }
 
         try {
-            Log.info("Sending: $dataStr")
             existingSubscription.send(
                 sse.newEventBuilder()
                     .name(EVENT_NAME)
@@ -73,7 +72,6 @@ class SseHandler(private val sse: Sse) {
             existingSubscription.close()
 
             Log.info("Error sending SSE event: $e")
-            Log.info("Error sending SSE event message: ${e.stackTrace}")
         }
     }
 }

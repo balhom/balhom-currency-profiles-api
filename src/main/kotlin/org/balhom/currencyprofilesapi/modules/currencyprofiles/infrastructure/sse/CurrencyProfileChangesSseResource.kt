@@ -1,5 +1,6 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.sse
 
+import io.quarkus.runtime.annotations.RegisterForReflection
 import jakarta.inject.Inject
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
@@ -14,6 +15,7 @@ import java.util.UUID
 
 @Path(CurrencyProfileChangesSseResource.RESOURCE_PATH)
 @Produces(MediaType.SERVER_SENT_EVENTS)
+@RegisterForReflection
 class CurrencyProfileChangesSseResource(
     private val sseHandler: SseHandler
 ) {
