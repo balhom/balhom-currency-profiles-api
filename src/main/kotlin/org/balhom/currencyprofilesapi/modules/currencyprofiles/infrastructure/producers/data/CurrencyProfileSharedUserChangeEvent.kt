@@ -7,9 +7,4 @@ import java.util.*
 data class CurrencyProfileSharedUserChangeEvent(
     var id: UUID,
     var email: String,
-) {
-    constructor() : this(
-        UUID.randomUUID(),
-        ""
-    )
-}
+)

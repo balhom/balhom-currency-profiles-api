@@ -15,15 +15,6 @@ data class TransactionChangeEvent(
     var currencyProfileId: UUID,
     var userId: UUID,
 ) {
-    constructor() : this(
-        "",
-        UUID.randomUUID(),
-        BigDecimal(0),
-        null,
-        UUID.randomUUID(),
-        UUID.randomUUID(),
-    )
-
     fun toChangeProps(): TransactionChangeProps {
         return TransactionChangeProps(
             EventChangeTypeEnum.fromAction(action),

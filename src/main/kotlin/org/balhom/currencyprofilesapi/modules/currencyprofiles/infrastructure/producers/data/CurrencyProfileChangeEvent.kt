@@ -15,7 +15,6 @@ data class CurrencyProfileChangeEvent(
     var ownerId: UUID,
     var sharedUsers: List<CurrencyProfileSharedUserChangeEvent>,
 ) {
-
     companion object {
         fun fromDomain(
             action: String,
