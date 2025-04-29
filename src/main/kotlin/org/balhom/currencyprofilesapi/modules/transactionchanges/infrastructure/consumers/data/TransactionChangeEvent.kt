@@ -8,13 +8,22 @@ import java.util.*
 
 @RegisterForReflection
 data class TransactionChangeEvent(
-    val action: String,
-    val id: UUID,
-    val amount: BigDecimal,
-    val oldAmount: BigDecimal?,
-    val currencyProfileId: UUID,
-    val userId: UUID,
+    var action: String,
+    var id: UUID,
+    var amount: BigDecimal,
+    var oldAmount: BigDecimal?,
+    var currencyProfileId: UUID,
+    var userId: UUID,
 ) {
+    constructor() : this(
+        "",
+        UUID.randomUUID(),
+        BigDecimal(0),
+        null,
+        UUID.randomUUID(),
+        UUID.randomUUID(),
+    )
+
     fun toChangeProps(): TransactionChangeProps {
         return TransactionChangeProps(
             EventChangeTypeEnum.fromAction(action),
