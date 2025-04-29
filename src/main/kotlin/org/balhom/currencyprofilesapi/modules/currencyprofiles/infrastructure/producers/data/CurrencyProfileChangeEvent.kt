@@ -25,22 +25,6 @@ data class CurrencyProfileChangeEvent(
         emptyList()
     )
 
-    fun toMap(): Map<String, Any> = mapOf(
-        "action" to action,
-        "id" to id.toString(),
-        "balance" to balance.toString(),
-        "monthlyGoal" to monthlyGoal.toString(),
-        "yearlyGoal" to yearlyGoal.toString(),
-        "ownerId" to ownerId.toString(),
-        "sharedUsers" to sharedUsers
-            .map {
-                mapOf(
-                    "id" to it.id.toString(),
-                    "email" to it.email
-                )
-            },
-    )
-
     companion object {
         fun fromDomain(
             action: String,
