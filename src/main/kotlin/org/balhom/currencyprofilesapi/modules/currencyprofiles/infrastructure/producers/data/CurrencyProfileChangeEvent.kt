@@ -15,15 +15,6 @@ data class CurrencyProfileChangeEvent(
     var ownerId: UUID,
     var sharedUsers: List<CurrencyProfileSharedUserChangeEvent>,
 ) {
-    constructor() : this(
-        "",
-        UUID.randomUUID(),
-        BigDecimal(0),
-        BigDecimal(0),
-        BigDecimal(0),
-        UUID.randomUUID(),
-        emptyList()
-    )
 
     companion object {
         fun fromDomain(
