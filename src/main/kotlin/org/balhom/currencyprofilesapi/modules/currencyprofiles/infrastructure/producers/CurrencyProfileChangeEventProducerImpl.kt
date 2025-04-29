@@ -23,42 +23,27 @@ class CurrencyProfileChangeEventProducerImpl(
 
     override fun sendCreateEvent(currencyProfile: CurrencyProfile) {
         send(
-            CurrencyProfileChangeEvent(
+            CurrencyProfileChangeEvent.fromDomain(
                 "C",
-                currencyProfile.id,
-                currencyProfile.balance,
-                currencyProfile.goalMonthlySaving,
-                currencyProfile.goalYearlySaving,
-                currencyProfile.userId,
-                currencyProfile.sharedUsers,
+                currencyProfile
             )
         )
     }
 
     override fun sendUpdateEvent(currencyProfile: CurrencyProfile) {
         send(
-            CurrencyProfileChangeEvent(
+            CurrencyProfileChangeEvent.fromDomain(
                 "U",
-                currencyProfile.id,
-                currencyProfile.balance,
-                currencyProfile.goalMonthlySaving,
-                currencyProfile.goalYearlySaving,
-                currencyProfile.userId,
-                currencyProfile.sharedUsers,
+                currencyProfile
             )
         )
     }
 
     override fun sendDeleteEvent(currencyProfile: CurrencyProfile) {
         send(
-            CurrencyProfileChangeEvent(
+            CurrencyProfileChangeEvent.fromDomain(
                 "D",
-                currencyProfile.id,
-                currencyProfile.balance,
-                currencyProfile.goalMonthlySaving,
-                currencyProfile.goalYearlySaving,
-                currencyProfile.userId,
-                currencyProfile.sharedUsers,
+                currencyProfile
             )
         )
     }
