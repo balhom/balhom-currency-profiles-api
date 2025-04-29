@@ -72,6 +72,7 @@ class SseHandler(private val sse: Sse) {
             existingSubscription.close()
 
             Log.info("Error sending SSE event: $e")
+            Log.info("Error sending SSE event message: ${e.message}")
         }
     }
 }
