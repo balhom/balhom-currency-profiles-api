@@ -5,8 +5,8 @@ import io.quarkus.logging.Log
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.sse.Sse
 import jakarta.ws.rs.sse.SseEventSink
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
+import java.util.*
+import java.util.concurrent.*
 
 @ApplicationScoped
 class SseHandler(private val sse: Sse) {
@@ -28,7 +28,7 @@ class SseHandler(private val sse: Sse) {
     ) {
         // Check if a subscription already exists with this ID
         val existingSubscription = subscriptions[userId.toString()]
-        if (existingSubscription != null && ! existingSubscription.isClosed) {
+        if (existingSubscription != null && !existingSubscription.isClosed) {
             // Close the previous connection if it is still open
             existingSubscription.close()
         }
@@ -59,6 +59,7 @@ class SseHandler(private val sse: Sse) {
         }
 
         try {
+            Log.info("Sending: $dataStr")
             existingSubscription.send(
                 sse.newEventBuilder()
                     .name(EVENT_NAME)
@@ -72,7 +73,7 @@ class SseHandler(private val sse: Sse) {
             existingSubscription.close()
 
             Log.info("Error sending SSE event: $e")
-            Log.info("Error sending SSE event message: ${e.message}")
+            Log.info("Error sending SSE event message: ${e.stackTrace}")
         }
     }
 }
