@@ -1,9 +1,7 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models
 
-import io.quarkus.runtime.annotations.RegisterForReflection
-import java.util.UUID
+import java.util.*
 
-@RegisterForReflection
 data class CurrencyProfileSharedUser(
     var id: UUID,
     var email: String,

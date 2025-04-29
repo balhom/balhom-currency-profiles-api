@@ -1,11 +1,9 @@
 package org.balhom.currencyprofilesapi.modules.currencyprofiles.infrastructure.producers.data
 
-import io.quarkus.runtime.annotations.RegisterForReflection
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfileSharedUser
 import java.math.BigDecimal
-import java.util.UUID
+import java.util.*
 
-@RegisterForReflection
 data class CurrencyProfileChangeEvent(
     val action: String,
     val id: UUID,
@@ -13,5 +11,21 @@ data class CurrencyProfileChangeEvent(
     val monthlyGoal: BigDecimal,
     val yearlyGoal: BigDecimal,
     val ownerId: UUID,
-    val sharedUsers: MutableList<CurrencyProfileSharedUser>,
-)
+    val sharedUsers: List<CurrencyProfileSharedUser>,
+) {
+    fun toMap(): Map<String, Any> = mapOf(
+        "action" to action,
+        "id" to id.toString(),
+        "balance" to balance.toString(),
+        "monthlyGoal" to monthlyGoal.toString(),
+        "yearlyGoal" to yearlyGoal.toString(),
+        "ownerId" to ownerId.toString(),
+        "sharedUsers" to sharedUsers
+            .map {
+                mapOf(
+                    "id" to it.id.toString(),
+                    "email" to it.email
+                )
+            },
+    )
+}

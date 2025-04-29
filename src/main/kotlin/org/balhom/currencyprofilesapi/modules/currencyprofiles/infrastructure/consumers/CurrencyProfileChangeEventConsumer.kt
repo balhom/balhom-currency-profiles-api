@@ -16,13 +16,13 @@ class CurrencyProfileChangeEventConsumer(
 
         sseHandler.sendMessage(
             event.ownerId,
-            event
+            event.toMap()
         )
 
         event.sharedUsers.forEach {
             sseHandler.sendMessage(
                 it.id,
-                event
+                event.toMap()
             )
         }
     }
