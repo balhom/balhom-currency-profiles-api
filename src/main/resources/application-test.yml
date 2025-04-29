@@ -9,8 +9,10 @@ quarkus:
       enabled: true
       shared: true
       buckets: balhom-currency-api-bucket
-    bucket:
-      name: balhom-currency-api-bucket
+
+s3:
+  bucket:
+    name: balhom-currency-api-bucket
 
 mp:
   messaging:

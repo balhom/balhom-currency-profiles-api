@@ -18,7 +18,7 @@ import java.time.Duration
 class S3Client(
     val s3Client: S3Client,
     val s3Presigner: S3Presigner,
-    @ConfigProperty(name = "quarkus.s3.bucket.name") val bucketName: String
+    @ConfigProperty(name = "s3.bucket.name") val bucketName: String
 ) : ObjectStorageClient {
 
     override fun doesObjectExist(objectKey: String): Boolean {

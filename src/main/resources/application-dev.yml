@@ -1,6 +1,6 @@
 quarkus:
   log:
-    level: DEBUG
+    level: INFO
 
   oidc:
     auth-server-url: http://localhost:7080/realms/balhom-realm
@@ -33,8 +33,10 @@ quarkus:
           secret-access-key: password
     devservices:
       enabled: false
-    bucket:
-      name: balhom-currency-profiles-api-bucket
+
+s3:
+  bucket:
+    name: balhom-currency-profiles-api-bucket
 
 kafka:
   bootstrap:

@@ -31,8 +31,10 @@ quarkus:
           secret-access-key: ${S3_SECRET_KEY}
     devservices:
       enabled: false
-    bucket:
-      name: ${S3_BUCKET_NAME:balhom-bucket}
+
+s3:
+  bucket:
+    name: ${S3_BUCKET_NAME:balhom-bucket}
 
 kafka:
   bootstrap:
