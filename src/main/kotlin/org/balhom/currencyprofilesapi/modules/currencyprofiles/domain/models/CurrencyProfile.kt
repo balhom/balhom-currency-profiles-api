@@ -26,6 +26,10 @@ data class CurrencyProfile(
 ) {
     companion object {
         const val MAX_ALLOWED_SHARED_USERS = 5
+
+        const val MAX_ALLOWED_PER_USER = 10
+
+        const val IMAGE_PATH_PREFIX = "currency-profiles"
     }
 
     fun update(props: UpdateCurrencyProfileProps) {

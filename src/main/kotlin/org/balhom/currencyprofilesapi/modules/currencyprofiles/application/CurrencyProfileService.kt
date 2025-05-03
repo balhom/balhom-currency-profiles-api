@@ -13,7 +13,7 @@ import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UploadCurrencyProfileImageProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.repositories.CurrencyProfileRepository
-import java.util.UUID
+import java.util.*
 
 
 @ApplicationScoped
@@ -23,12 +23,6 @@ class CurrencyProfileService(
     private val objectStorageClient: ObjectStorageClient,
     private val idpAdminClient: IdpAdminClient,
 ) {
-    companion object {
-        const val MAX_ALLOWED_PER_USER = 10
-
-        const val CURRENCY_PROFILE_PATH_PREFIX = "currency-profiles"
-    }
-
     fun getAllCurrencyProfiles(userId: UUID): List<CurrencyProfile> = currencyProfileRepository
         .findAllByUserIdOrSharedUserId(userId)
 
@@ -45,7 +39,7 @@ class CurrencyProfileService(
         if (
             currencyProfileRepository.countByUserIdOrSharedUserId(
                 currencyProfile.userId
-            ) >= MAX_ALLOWED_PER_USER
+            ) >= CurrencyProfile.MAX_ALLOWED_PER_USER
         ) {
             throw CurrencyProfilesExceededException()
         }
@@ -64,13 +58,13 @@ class CurrencyProfileService(
 
         if (currencyProfile.imageData?.filePath != null) {
             objectStorageClient.deleteObject(
-                currencyProfile.imageData !!.filePath
+                currencyProfile.imageData!!.filePath
             )
         }
 
         val imagePath: String = (
-                CURRENCY_PROFILE_PATH_PREFIX
-                        + "/" + currencyProfile.userId + "/"
+                CurrencyProfile.IMAGE_PATH_PREFIX
+                        + "/" + currencyProfile.id + "/"
                         + UUID.randomUUID().toString()
                 )
 
@@ -131,7 +125,7 @@ class CurrencyProfileService(
 
         if (currencyProfile.imageData?.filePath != null) {
             objectStorageClient.deleteObject(
-                currencyProfile.imageData !!.filePath
+                currencyProfile.imageData!!.filePath
             )
         }
 
