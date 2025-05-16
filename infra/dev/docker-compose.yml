@@ -45,36 +45,36 @@ services:
 
   # MongoDB Section
 
-  balhom-currency-profiles-api-mongodb:
+  balhom-mongodb:
     image: mongo:5.0.31
-    container_name: balhom-currency-profiles-api-mongodb
+    container_name: balhom-mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27017:27017"
     volumes:
-      - balhom-currency-profiles-api-mongodb-volume:/data/db
+      - balhom-mongodb-volume:/data/db
     networks:
-      balhom-currency-profiles-api-mongodb-net:
+      balhom-mongodb-net:
     restart: unless-stopped
 
-  balhom-currency-profiles-api-mongo-express:
+  balhom-mongo-express:
     image: mongo-express:1.0.2
-    container_name: balhom-currency-profiles-api-mongo-express
+    container_name: balhom-mongo-express
     restart: unless-stopped
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
-      ME_CONFIG_MONGODB_SERVER: balhom-currency-profiles-api-mongodb
+      ME_CONFIG_MONGODB_SERVER: balhom-mongodb
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
     ports:
       - "7091:8081"
     networks:
-      balhom-currency-profiles-api-mongodb-net:
+      balhom-mongodb-net:
     depends_on:
-      - balhom-currency-profiles-api-mongodb
+      - balhom-mongodb
 
   # Kafka Section
 
@@ -143,13 +143,13 @@ services:
       - balhom-minio-net
 
 volumes:
-  balhom-currency-profiles-api-mongodb-volume:
+  balhom-mongodb-volume:
   balhom-keycloak-db-volume:
   balhom-kafka-volume:
   balhom-minio-volume:
 
 networks:
-  balhom-currency-profiles-api-mongodb-net:
+  balhom-mongodb-net:
   balhom-keycloak-net:
   balhom-kafka-net:
   balhom-minio-net:
