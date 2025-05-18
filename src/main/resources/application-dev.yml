@@ -36,7 +36,7 @@ quarkus:
 
 s3:
   bucket:
-    name: balhom-currency-profiles-api-bucket
+    name: balhom-bucket
 
 kafka:
   bootstrap:
