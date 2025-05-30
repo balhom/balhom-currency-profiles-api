@@ -19,7 +19,7 @@ currency profiles.
 | KEYCLOAK_API_CLIENT_ID                             | Keycloak instance client id for the API to read user data. Default: balhom-api-client                          |
 | KEYCLOAK_API_CLIENT_SECRET                         | Keycloak instance client secret for the API to read user data                                                  |
 | MONGODB_URL                                        | Mongo instance url                                                                                             |
-| MONGODB_DB                                         | Mongo instance database name                                                                                   |
+| MONGODB_DB                                         | Mongo instance database name. Default: balHomCurrencyDB                                                        |
 | S3_URL                                             | S3 url                                                                                                         |
 | S3_REGION                                          | S3 region. Default: us-west-2                                                                                  |
 | S3_ACCESS_KEY                                      | S3 access key                                                                                                  |
