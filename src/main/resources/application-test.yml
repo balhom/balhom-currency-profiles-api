@@ -8,7 +8,6 @@ quarkus:
     devservices:
       enabled: true
       shared: true
-      buckets: balhom-currency-api-bucket
 
 s3:
   bucket:
