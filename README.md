@@ -26,7 +26,6 @@ currency profiles.
 | S3_SECRET_KEY                                      | S3 secret key                                                                                                  |
 | S3_BUCKET_NAME                                     | S3 bucket name. Default: balhom-bucket                                                                         |
 | KAFKA_SERVERS                                      | Kafka server urls                                                                                              |
-| QUARKUS_HTTP_CORS_ORIGINS                          | CORS origins                                                                                                   |
 | QUARKUS_HTTP_CORS_ORIGINS                          | CORS origins. Optional                                                                                         |
 | QUARKUS_HTTP_CORS_HEADERS                          | Headers allowed. Optional                                                                                      |
 | QUARKUS_HTTP_CORS_EXPOSED_HEADERS                  | Headers exposed in responses. Optional                                                                         |
