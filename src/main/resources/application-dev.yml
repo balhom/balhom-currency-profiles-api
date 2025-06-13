@@ -40,7 +40,7 @@ s3:
 
 kafka:
   bootstrap:
-    servers: PLAINTEXT_HOST://localhost:29092
+    servers: PLAINTEXT_HOST://localhost:9092
 
 mp:
   messaging:

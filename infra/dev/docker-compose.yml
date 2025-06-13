@@ -10,21 +10,21 @@ services:
     ports:
       - "7080:8080"
     environment:
-      - KEYCLOAK_DATABASE_HOST=balhom-keycloak-db
-      - KEYCLOAK_DATABASE_PORT=5432
-      - KEYCLOAK_DATABASE_NAME=balhomdb
-      - KEYCLOAK_DATABASE_USER=keycloak_user
-      - KEYCLOAK_DATABASE_PASSWORD=password
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=password
-      - KEYCLOAK_MANAGEMENT_USER=manager
-      - KEYCLOAK_MANAGEMENT_PASSWORD=password
-      - KEYCLOAK_INIT_REALM=balhom-realm
-      - KEYCLOAK_INIT_CLIENT=balhom-client
-      - KEYCLOAK_INIT_USER=test@balhom.com
-      - KEYCLOAK_INIT_USER_PASSWORD=password
-      - KEYCLOAK_INIT_API_CLIENT=balhom-api-client
-      - KEYCLOAK_INIT_API_CLIENT_SECRET=secretKey
+      KEYCLOAK_DATABASE_HOST: balhom-keycloak-db
+      KEYCLOAK_DATABASE_PORT: 5432
+      KEYCLOAK_DATABASE_NAME: balhomdb
+      KEYCLOAK_DATABASE_USER: keycloak_user
+      KEYCLOAK_DATABASE_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: password
+      KEYCLOAK_MANAGEMENT_USER: manager
+      KEYCLOAK_MANAGEMENT_PASSWORD: password
+      KEYCLOAK_INIT_REALM: balhom-realm
+      KEYCLOAK_INIT_CLIENT: balhom-client
+      KEYCLOAK_INIT_USER: test@balhom.com
+      KEYCLOAK_INIT_USER_PASSWORD: password
+      KEYCLOAK_INIT_API_CLIENT: balhom-api-client
+      KEYCLOAK_INIT_API_CLIENT_SECRET: secretKey
     user: root
     networks:
       balhom-keycloak-net:
@@ -34,9 +34,9 @@ services:
     image: postgres:17.2
     container_name: balhom-keycloak-db
     environment:
-      - POSTGRES_DB=balhomdb
-      - POSTGRES_USER=keycloak_user
-      - POSTGRES_PASSWORD=password
+      POSTGRES_DB: balhomdb
+      POSTGRES_USER: keycloak_user
+      POSTGRES_PASSWORD: password
     volumes:
       - balhom-keycloak-db-volume:/var/lib/postgresql/data
     networks:
@@ -78,35 +78,27 @@ services:
 
   # Kafka Section
 
-  balhom-zookeeper:
-    image: confluentinc/cp-zookeeper:7.8.0
-    container_name: balhom-zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 22181
-      ZOOKEEPER_TICK_TIME: 2000
-    restart: unless-stopped
-    ports:
-      - "22181:2181"
-    networks:
-      balhom-kafka-net:
-
   balhom-kafka:
-    image: confluentinc/cp-kafka:7.8.0
+    image: confluentinc/cp-kafka:8.0.0
     container_name: balhom-kafka
     ports:
-      - "29092:29092"
+      - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: balhom-zookeeper:22181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://balhom-kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://balhom-kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: balhom-kafka
+      KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@balhom-kafka:29093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,CONTROLLER://balhom-kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      CLUSTER_ID: 824407df-30c3-4d20-b3ca-b3dad7ad96b7
     restart: unless-stopped
     networks:
       balhom-kafka-net:
-    depends_on:
-      - balhom-zookeeper
 
   balhom-api-kafdrop:
     image: obsidiandynamics/kafdrop:4.1.0
@@ -114,7 +106,7 @@ services:
     ports:
       - "9000:9000"
     environment:
-      KAFKA_BROKERCONNECT: balhom-kafka:9092
+      KAFKA_BROKERCONNECT: balhom-kafka:29092
       JVM_OPTS: -Xms32M -Xmx64M
     restart: unless-stopped
     networks:
@@ -131,16 +123,16 @@ services:
       - "9090:9090"
       - "9091:9091"
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password
-      - MINIO_DEFAULT_BUCKET=balhom-bucket
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+      MINIO_DEFAULT_BUCKET: balhom-bucket
     restart: unless-stopped
     command: [ "/bin/bash", "-c", "/scripts/entrypoint.sh" ]
     volumes:
       - balhom-minio-volume:/bitnami/minio/data
       - ./minio/scripts/entrypoint.sh:/scripts/entrypoint.sh
     networks:
-      - balhom-minio-net
+      balhom-minio-net:
 
 volumes:
   balhom-mongodb-volume:
@@ -149,7 +141,7 @@ volumes:
   balhom-minio-volume:
 
 networks:
-  balhom-mongodb-net:
   balhom-keycloak-net:
+  balhom-mongodb-net:
   balhom-kafka-net:
   balhom-minio-net:
