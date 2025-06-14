@@ -20,7 +20,7 @@ class TransactionChangesService(
 
         currencyProfile.balance += props.sum
 
-        currencyProfileService.updateCurrencyProfile(
+        currencyProfileService.internalUpdateCurrencyProfile(
             currencyProfile
         )
     }

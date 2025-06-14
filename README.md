@@ -41,6 +41,7 @@ currency profiles.
 | 102  | "Currency profile max number reached"             |
 | 103  | "Currency Profile user not found"                 |
 | 104  | "Currency profile shared user max number reached" |
+| 105  | "Currency profile shared user max number reached" |
 
 > **1 to 99** Generic errors \
 > **100 to 199** Currency Profile related errors

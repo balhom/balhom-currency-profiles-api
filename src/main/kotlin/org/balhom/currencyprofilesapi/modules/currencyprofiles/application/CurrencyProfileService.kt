@@ -8,6 +8,7 @@ import org.balhom.currencyprofilesapi.common.data.models.FileReferenceData
 import org.balhom.currencyprofilesapi.common.data.props.ObjectIdUserProps
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfileNotFoundException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.CurrencyProfilesExceededException
+import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.exceptions.OperationNotAllowedForCurrencyProfileException
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.models.CurrencyProfile
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.producers.CurrencyProfileChangeEventProducer
 import org.balhom.currencyprofilesapi.modules.currencyprofiles.domain.props.UpdateCurrencyProfileProps
@@ -56,6 +57,11 @@ class CurrencyProfileService(
             props.objectIdUserProps
         )
 
+        // Image upload not allowed for non owners
+        if (props.objectIdUserProps.userId != currencyProfile.userId) {
+            throw OperationNotAllowedForCurrencyProfileException()
+        }
+
         if (currencyProfile.imageData?.filePath != null) {
             objectStorageClient.deleteObject(
                 currencyProfile.imageData!!.filePath
@@ -92,6 +98,11 @@ class CurrencyProfileService(
             )
         )
 
+        // Currency profile update not allowed for non owners
+        if (props.userId != currencyProfile.userId) {
+            throw OperationNotAllowedForCurrencyProfileException()
+        }
+
         currencyProfile.update(props)
 
         currencyProfileChangeEventProducer
@@ -101,7 +112,7 @@ class CurrencyProfileService(
             .save(currencyProfile)
     }
 
-    fun updateCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {
+    fun internalUpdateCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {
         currencyProfileChangeEventProducer
             .sendUpdateEvent(currencyProfile)
 
@@ -116,21 +127,40 @@ class CurrencyProfileService(
                 props.userId
             ) ?: throw CurrencyProfileNotFoundException()
 
-        handleCurrencyProfileDelete(currencyProfile)
+        handleCurrencyProfileDelete(
+            props.userId,
+            currencyProfile,
+        )
     }
 
-    private fun handleCurrencyProfileDelete(currencyProfile: CurrencyProfile) {
-        currencyProfileChangeEventProducer
-            .sendDeleteEvent(currencyProfile)
+    private fun handleCurrencyProfileDelete(
+        userId: UUID,
+        currencyProfile: CurrencyProfile
+    ) {
+        // If userId is a shared user then its reference must be deleted
+        // Currency profile delete action refers to a leave operation
+        if (userId != currencyProfile.userId) {
+            currencyProfile
+                .sharedUsers
+                .removeIf({ it.id == userId })
 
-        if (currencyProfile.imageData?.filePath != null) {
-            objectStorageClient.deleteObject(
-                currencyProfile.imageData!!.filePath
-            )
+            currencyProfileRepository
+                .save(currencyProfile)
         }
+        // If userId is the currency profile owner then profile must be deleted
+        else {
+            currencyProfileChangeEventProducer
+                .sendDeleteEvent(currencyProfile)
 
-        currencyProfileRepository
-            .delete(currencyProfile)
+            if (currencyProfile.imageData?.filePath != null) {
+                objectStorageClient.deleteObject(
+                    currencyProfile.imageData!!.filePath
+                )
+            }
+
+            currencyProfileRepository
+                .delete(currencyProfile)
+        }
     }
 
     fun deleteAllCurrencyProfiles(userId: UUID) {
@@ -138,19 +168,10 @@ class CurrencyProfileService(
             .findAllByUserIdOrSharedUserId(userId)
 
         for (currencyProfile in currencyProfiles) {
-            // If userId is the currency profile owner then profile must be deleted
-            if (currencyProfile.userId == userId) {
-                handleCurrencyProfileDelete(currencyProfile)
-            }
-            // If userId is a shared user then its reference must be deleted
-            else {
+            handleCurrencyProfileDelete(
+                userId,
                 currencyProfile
-                    .sharedUsers
-                    .removeIf({ it.id == userId })
-
-                currencyProfileRepository
-                    .save(currencyProfile)
-            }
+            )
         }
 
         idpAdminClient.deleteUser(userId)
