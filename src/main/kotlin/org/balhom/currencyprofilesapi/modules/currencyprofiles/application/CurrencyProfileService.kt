@@ -86,8 +86,12 @@ class CurrencyProfileService(
             imagePath
         )
 
-        currencyProfileRepository
+        val storedCurrencyProfile = currencyProfileRepository
             .save(currencyProfile)
+
+        // Send update event after image url is retrieved
+        currencyProfileChangeEventProducer
+            .sendUpdateEvent(storedCurrencyProfile)
     }
 
     fun updateCurrencyProfile(props: UpdateCurrencyProfileProps): CurrencyProfile {
@@ -105,11 +109,13 @@ class CurrencyProfileService(
 
         currencyProfile.update(props)
 
-        currencyProfileChangeEventProducer
-            .sendUpdateEvent(currencyProfile)
-
-        return currencyProfileRepository
+        val storedCurrencyProfile = currencyProfileRepository
             .save(currencyProfile)
+
+        currencyProfileChangeEventProducer
+            .sendUpdateEvent(storedCurrencyProfile)
+
+        return storedCurrencyProfile
     }
 
     fun internalUpdateCurrencyProfile(currencyProfile: CurrencyProfile): CurrencyProfile {

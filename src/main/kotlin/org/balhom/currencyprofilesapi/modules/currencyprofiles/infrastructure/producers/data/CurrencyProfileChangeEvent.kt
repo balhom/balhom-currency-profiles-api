@@ -12,6 +12,7 @@ data class CurrencyProfileChangeEvent(
     var balance: BigDecimal,
     var monthlyGoal: BigDecimal,
     var yearlyGoal: BigDecimal,
+    var imageUrl: String?,
     var ownerId: UUID,
     var sharedUsers: List<CurrencyProfileSharedUserChangeEvent>,
 ) {
@@ -25,6 +26,7 @@ data class CurrencyProfileChangeEvent(
             domain.balance,
             domain.goalMonthlySaving,
             domain.goalYearlySaving,
+            domain.imageData?.url,
             domain.userId,
             domain
                 .sharedUsers
