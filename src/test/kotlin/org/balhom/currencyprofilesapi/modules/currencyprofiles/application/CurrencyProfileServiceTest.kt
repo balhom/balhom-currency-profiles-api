@@ -77,6 +77,7 @@ class CurrencyProfileServiceTest {
         val props = MockUploadCurrencyProfileImagePropsFactory.create()
 
         val currencyProfile = MockCurrencyProfileFactory.create()
+        currencyProfile.userId = props.objectIdUserProps.userId
         currencyProfile.imageData = MockFileReferenceDataFactory.create(
             currencyProfile.id
         )
