@@ -9,6 +9,7 @@ import java.util.*
 data class CurrencyProfileChangeEvent(
     var action: String,
     var id: UUID,
+    var name: String,
     var balance: BigDecimal,
     var monthlyGoal: BigDecimal,
     var yearlyGoal: BigDecimal,
@@ -23,6 +24,7 @@ data class CurrencyProfileChangeEvent(
         ): CurrencyProfileChangeEvent = CurrencyProfileChangeEvent(
             action,
             domain.id,
+            domain.name,
             domain.balance,
             domain.goalMonthlySaving,
             domain.goalYearlySaving,
