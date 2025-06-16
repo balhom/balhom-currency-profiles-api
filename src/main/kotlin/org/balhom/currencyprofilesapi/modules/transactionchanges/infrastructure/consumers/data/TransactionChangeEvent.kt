@@ -1,6 +1,5 @@
 package org.balhom.currencyprofilesapi.modules.transactionchanges.infrastructure.consumers.data
 
-import io.quarkus.logging.Log
 import io.quarkus.runtime.annotations.RegisterForReflection
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.enums.TransactionTypeEnum
@@ -21,8 +20,6 @@ data class TransactionChangeEvent(
     fun toChangeProps(): TransactionChangeProps {
         val sum = (if (type == TransactionTypeEnum.INCOME) BigDecimal(1) else BigDecimal(-1)) *
                 (amount - (oldAmount ?: BigDecimal(0.0)))
-
-        Log.info("Using sum: $sum")
 
         return TransactionChangeProps(
             EventChangeTypeEnum.fromAction(action),
