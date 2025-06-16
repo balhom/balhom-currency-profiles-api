@@ -12,7 +12,7 @@ class CurrencyProfileChangeEventConsumer(
 ) {
     @Incoming("currency-profile-events-in")
     fun receive(event: CurrencyProfileChangeEvent) {
-        Log.debug("Consuming Kafka currency profile event: " + event.id)
+        Log.info("Consuming Kafka currency profile event: " + event.id)
 
         sseHandler.sendMessage(
             event.ownerId,
