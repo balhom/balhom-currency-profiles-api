@@ -13,24 +13,6 @@ s3:
   bucket:
     name: balhom-bucket
 
-mp:
-  messaging:
-    outgoing:
-      currency-profile-events-out:
-        connector: smallrye-kafka
-        topic: currency-profile-events
-    incoming:
-      transaction-events:
-        connector: smallrye-kafka
-        topic: transaction-events
-        group:
-          id: currency-profile-group
-      currency-profile-events-in:
-        connector: smallrye-kafka
-        topic: currency-profile-events
-        group:
-          id: currency-profile-group
-
 keycloak:
   admin:
     url: http://test
