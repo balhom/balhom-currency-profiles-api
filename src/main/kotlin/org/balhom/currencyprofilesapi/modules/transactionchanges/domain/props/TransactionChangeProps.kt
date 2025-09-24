@@ -2,12 +2,12 @@ package org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props
 
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import java.math.BigDecimal
-import java.util.*
+import java.util.UUID
 
 data class TransactionChangeProps(
-    val eventChangeTypeEnum: EventChangeTypeEnum,
-    val transactionId: UUID,
+    val eventChangeType: EventChangeTypeEnum,
+    val id: UUID,
+    val sum: BigDecimal,
     val currencyProfileId: UUID,
     val userId: UUID,
-    val sum: BigDecimal,
 )
