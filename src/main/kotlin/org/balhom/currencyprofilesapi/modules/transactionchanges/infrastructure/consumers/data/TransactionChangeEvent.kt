@@ -4,6 +4,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import org.balhom.currencyprofilesapi.common.data.enums.EventChangeTypeEnum
 import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.enums.TransactionTypeEnum
 import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props.TransactionChangeProps
+import org.balhom.currencyprofilesapi.modules.transactionchanges.domain.props.TransactionOldDataProps
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
@@ -21,13 +22,20 @@ data class TransactionChangeEvent(
     var userId: UUID,
 ) {
     fun toChangeProps(): TransactionChangeProps {
-        val sum = (if (type == TransactionTypeEnum.INCOME) BigDecimal(1) else BigDecimal(- 1)) *
-                (amount - (oldAmount ?: BigDecimal(0.0)))
-
         return TransactionChangeProps(
-            eventChangeType = EventChangeTypeEnum.fromAction(action),
+            eventChangeType = EventChangeTypeEnum
+                .fromAction(action),
             id = id,
-            sum = sum,
+            type = type,
+            date = date,
+            amount = amount,
+            oldData = if (
+                oldDate == null
+                || oldAmount == null
+            ) null else TransactionOldDataProps(
+                oldDate = oldDate !!,
+                oldAmount = oldAmount !!
+            ),
             currencyProfileId = currencyProfileId,
             userId = userId,
         )
